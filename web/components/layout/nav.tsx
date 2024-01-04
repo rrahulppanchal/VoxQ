@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
-
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip';
 import { buttonVariants } from '../ui/button';
@@ -13,14 +13,17 @@ interface NavProps {
   links: {
     title: string;
     label?: string;
+    to?: string;
     icon: LucideIcon;
     variant: 'default' | 'ghost';
   }[];
 }
 
 export function Nav({ links, isCollapsed }: NavProps) {
+  const pathname = usePathname();
   return (
     <div data-collapsed={isCollapsed} className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2">
+      <div className="p-4 border-b">Logo</div>
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) =>
           isCollapsed ? (
@@ -46,16 +49,16 @@ export function Nav({ links, isCollapsed }: NavProps) {
           ) : (
             <Link
               key={index}
-              href="#"
+              href={link.to || '#'}
               className={cn(
-                buttonVariants({ variant: link.variant, size: 'sm' }),
-                link.variant === 'default' && 'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
+                buttonVariants({ variant: link.variant }),
+                link.to === pathname && 'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
                 'justify-start',
               )}
             >
               <link.icon className="mr-2 h-4 w-4" />
               {link.title}
-              {link.label && <span className={cn('ml-auto', link.variant === 'default' && 'text-background dark:text-white')}>{link.label}</span>}
+              {link.label && <span className={cn('ml-auto', link.to === pathname && 'text-background dark:text-white')}>{link.label}</span>}
             </Link>
           ),
         )}

@@ -2,14 +2,19 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ModeToggle } from '../theme/action-component';
 import { Button } from '../ui/button';
-import { BellRing, Blocks } from 'lucide-react';
+import { BellRing, Blocks, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-function Header() {
+function Header(props: any) {
   return (
     <>
-      <div className="flex items-center justify-between mt-[5px] m-[10px]">
-        <div>Dashboard</div>
+      <div className="flex items-center justify-between m-[10px]">
+        <div className="flex gap-4 justify-center items-center">
+          <Button variant="outline" size="icon" onClick={() => props.toggle()}>
+            {props.isSideBar ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+          <h1>Logo</h1>
+        </div>
         <div className="flex items-center justify-between gap-3">
           <Button
             variant="outline"

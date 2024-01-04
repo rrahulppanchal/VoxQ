@@ -3,94 +3,85 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Nav } from './nav';
-import { Archive, ArchiveX, File, Inbox, Link, Send, Trash2 } from 'lucide-react';
+import { Archive, ArchiveX, ChevronRight, File, Inbox, Link, Send, Trash2 } from 'lucide-react';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Button, buttonVariants } from '../ui/button';
 import Header from './header';
+import Image from 'next/image';
+import { ScrollArea } from '../ui/scroll-area';
 
 export function MainLayout(props: any) {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  return (
-    <TooltipProvider delayDuration={0}>
-      <ResizablePanelGroup direction="vertical" className="min-h-[100vh] max-w-full rounded-lg border">
-        <ResizableHandle />
-        <ResizablePanel defaultSize={100}>
-          <ResizablePanelGroup direction="horizontal" className="min-h-[200px] max-w-full">
-            <ResizablePanel
-              defaultSize={15}
-              maxSize={25}
-              minSize={7}
-              collapsedSize={3}
-              collapsible={true}
-              // onCollapse={(collapse: any) => console.log(collapse)}
-              onResize={(size) => (size < 4 ? setIsCollapsed(true) : setIsCollapsed(false))}
-            >
-              <ResizablePanelGroup direction="vertical">
-                <ResizablePanel defaultSize={7} maxSize={7} minSize={7}>
-                  <Button name="adfe" variant="outline" size="icon">
-                    <Archive className="m-2 h-4 w-4" />
-                  </Button>
-                </ResizablePanel>
-                <ResizableHandle />
-                <ResizablePanel>
-                  <Nav
-                    isCollapsed={isCollapsed}
-                    links={[
-                      {
-                        title: 'Inbox',
-                        label: '128',
-                        icon: Inbox,
-                        variant: 'default',
-                      },
-                      {
-                        title: 'Drafts',
-                        label: '9',
-                        icon: File,
-                        variant: 'ghost',
-                      },
-                      {
-                        title: 'Sent',
-                        label: '',
-                        icon: Send,
-                        variant: 'ghost',
-                      },
-                      {
-                        title: 'Junk',
-                        label: '23',
-                        icon: ArchiveX,
-                        variant: 'ghost',
-                      },
-                      {
-                        title: 'Trash',
-                        label: '',
-                        icon: Trash2,
-                        variant: 'ghost',
-                      },
-                      {
-                        title: 'Archive',
-                        label: '',
-                        icon: Archive,
-                        variant: 'ghost',
-                      },
-                    ]}
-                  />
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
+  const [isSideBar, setIsSidebar] = useState(true);
+  const toggle = () => {
+    setIsSidebar(!isSideBar);
+  };
 
-            <ResizablePanel defaultSize={85}>
-              <ResizablePanelGroup direction="vertical">
-                <ResizablePanel defaultSize={7} maxSize={7}>
-                  <Header />
-                </ResizablePanel>
-                <ResizableHandle />
-                <ResizablePanel>{props.children}</ResizablePanel>
-              </ResizablePanelGroup>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </TooltipProvider>
+  return (
+    <>
+      <TooltipProvider>
+        <div className="flex">
+          {isSideBar && (
+            <aside className="border w-64 min-h-screen">
+              <Nav
+                isCollapsed={false}
+                links={[
+                  {
+                    title: 'Dashboard',
+                    to: '/dashboard',
+                    label: '128',
+                    icon: Inbox,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Drafts',
+                    to: '/test',
+                    label: '9',
+                    icon: File,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Sent',
+                    label: '',
+                    to: '/',
+                    icon: Send,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Junk',
+                    label: '23',
+                    to: '#',
+                    icon: ArchiveX,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Trash',
+                    label: '',
+                    to: '#',
+                    icon: Trash2,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Projects',
+                    label: '',
+                    to: '/project',
+                    icon: Archive,
+                    variant: 'ghost',
+                  },
+                ]}
+              />
+            </aside>
+          )}
+
+          <main className="flex-1 ">
+            <header className="m-0 p-1 border border-l-0">
+              <Header toggle={toggle} isSideBar={isSideBar} />
+            </header>
+            <ScrollArea className="h-[91vh] w-[100%]">
+              <div className="p-3">{props.children}</div>
+            </ScrollArea>
+          </main>
+        </div>
+      </TooltipProvider>
+    </>
   );
 }
