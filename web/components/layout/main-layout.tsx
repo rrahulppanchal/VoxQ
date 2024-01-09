@@ -3,7 +3,25 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Nav } from './nav';
-import { Archive, ArchiveX, ChevronRight, File, Inbox, Link, Send, Trash2 } from 'lucide-react';
+import {
+  ActivitySquare,
+  Archive,
+  ArchiveX,
+  Cable,
+  ChevronRight,
+  CircleUser,
+  Contact,
+  File,
+  HeartHandshake,
+  Inbox,
+  LayoutDashboard,
+  Link,
+  PanelsTopLeft,
+  Rss,
+  ScrollText,
+  Send,
+  Trash2,
+} from 'lucide-react';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Button, buttonVariants } from '../ui/button';
 import Header from './header';
@@ -29,42 +47,63 @@ export function MainLayout(props: any) {
                     title: 'Dashboard',
                     to: '/dashboard',
                     label: '128',
-                    icon: Inbox,
+                    icon: LayoutDashboard,
                     variant: 'ghost',
                   },
                   {
-                    title: 'Drafts',
-                    to: '/test',
+                    title: 'Leads',
+                    to: '/leads',
                     label: '9',
-                    icon: File,
+                    icon: Cable,
                     variant: 'ghost',
                   },
                   {
-                    title: 'Sent',
+                    title: 'Contacts',
                     label: '',
-                    to: '/',
-                    icon: Send,
+                    to: '/contacts',
+                    icon: Contact,
                     variant: 'ghost',
                   },
                   {
-                    title: 'Junk',
+                    title: 'Accounts',
                     label: '23',
-                    to: '#',
-                    icon: ArchiveX,
+                    to: '/accounts',
+                    icon: CircleUser,
                     variant: 'ghost',
                   },
                   {
-                    title: 'Trash',
+                    title: 'Deals',
                     label: '',
-                    to: '#',
-                    icon: Trash2,
+                    to: '/deals',
+                    icon: HeartHandshake,
                     variant: 'ghost',
                   },
                   {
                     title: 'Projects',
                     label: '',
                     to: '/project',
-                    icon: Archive,
+                    icon: PanelsTopLeft,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Activities',
+                    label: '',
+                    to: '/activities',
+                    icon: ActivitySquare,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Reports',
+                    label: '',
+                    to: '/reports',
+                    icon: ScrollText,
+                    variant: 'ghost',
+                  },
+                  {
+                    title: 'Feeds',
+                    label: '',
+                    to: '/feeds',
+                    icon: Rss,
                     variant: 'ghost',
                   },
                 ]}
@@ -73,7 +112,7 @@ export function MainLayout(props: any) {
           )}
 
           <main className="flex-1 ">
-            <header className="m-0 p-1 border border-l-0">
+            <header className="m-0 p-0 border border-l-0">
               <Header toggle={toggle} isSideBar={isSideBar} />
             </header>
             <ScrollArea className="h-[91vh] w-[100%]">

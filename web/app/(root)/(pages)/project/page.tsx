@@ -8,46 +8,29 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, List } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 const invoices = [
   {
-    invoice: 'INV007',
+    invoice: 'INV001',
     paymentStatus: 'Unpaid',
     totalAmount: '$300.00',
     paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV007',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$300.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV003',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer',
   },
   {
     invoice: 'INV002',
-    paymentStatus: 'Pending',
-    totalAmount: '$150.00',
-    paymentMethod: 'PayPal',
-  },
-  {
-    invoice: 'INV003',
     paymentStatus: 'Unpaid',
     totalAmount: '$350.00',
     paymentMethod: 'Bank Transfer',
   },
   {
-    invoice: 'INV006',
+    invoice: 'INV003',
     paymentStatus: 'Pending',
-    totalAmount: '$200.00',
-    paymentMethod: 'Bank Transfer',
+    totalAmount: '$150.00',
+    paymentMethod: 'PayPal',
   },
   {
     invoice: 'INV004',
@@ -62,18 +45,6 @@ const invoices = [
     paymentMethod: 'PayPal',
   },
   {
-    invoice: 'INV001',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV002',
-    paymentStatus: 'Pending',
-    totalAmount: '$150.00',
-    paymentMethod: 'PayPal',
-  },
-  {
     invoice: 'INV006',
     paymentStatus: 'Pending',
     totalAmount: '$200.00',
@@ -84,12 +55,6 @@ const invoices = [
     paymentStatus: 'Unpaid',
     totalAmount: '$300.00',
     paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV006',
-    paymentStatus: 'Pending',
-    totalAmount: '$200.00',
-    paymentMethod: 'Bank Transfer',
   },
 ];
 function ProjectPage() {
@@ -141,12 +106,12 @@ function ProjectPage() {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+              <Calendar mode="single" selected={date} onSelect={setDate} />
             </PopoverContent>
           </Popover>
         </div>
-        {/* <Modal /> */}
-        <Button>Add Project</Button>
+        <ProjectOperation />
+        {/* <Button>Add Project</Button> */}
       </div>
       <div className="mt-4 rounded border">
         <Table>
@@ -158,7 +123,8 @@ function ProjectPage() {
               <TableHead className="w-[100px]">Invoice</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Method</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead className="">Amount</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -167,14 +133,29 @@ function ProjectPage() {
                 <TableCell className="font-medium">{invoice.invoice}</TableCell>
                 <TableCell>{invoice.paymentStatus}</TableCell>
                 <TableCell>{invoice.paymentMethod}</TableCell>
-                <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+                <TableCell className="">{invoice.totalAmount}</TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button name="adfe" variant="ghost" size="icon">
+                        <List className="m-0 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => console.log(invoice)}>Edit</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => console.log(invoice)}>Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => console.log(invoice)}>More</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TableCell colSpan={3}>Total</TableCell>
-              <TableCell className="text-right">$2,500.00</TableCell>
+              <TableCell className="">$2,500.00</TableCell>
+              <TableCell className="text-right"></TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -183,7 +164,7 @@ function ProjectPage() {
   );
 }
 
-// export const Modal = (props: any) => {
+// export const Modal = () => {
 //   return (
 //     <Dialog>
 //       <DialogTrigger asChild>

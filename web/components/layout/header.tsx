@@ -2,7 +2,7 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ModeToggle } from '../theme/action-component';
 import { Button } from '../ui/button';
-import { BellRing, Blocks, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BellRing, Blocks, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 function Header(props: any) {
@@ -10,10 +10,10 @@ function Header(props: any) {
     <>
       <div className="flex items-center justify-between m-[10px]">
         <div className="flex gap-4 justify-center items-center">
-          <Button variant="outline" size="icon" onClick={() => props.toggle()}>
+          <Button variant="ghost" size="icon" onClick={() => props.toggle()}>
             {props.isSideBar ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </Button>
-          <h1>Logo</h1>
+          {/* <h1>Logo</h1> */}
         </div>
         <div className="flex items-center justify-between gap-3">
           <Button
@@ -30,10 +30,10 @@ function Header(props: any) {
               <span className="text-xs">⌘</span>K
             </kbd>
           </Button>
-          <Button name="adfe" variant="outline" size="icon">
-            <Blocks className="m-2 h-4 w-4" />
+          <Button name="adfe" variant="ghost" size="icon">
+            <Settings className="m-2 h-4 w-4" />
           </Button>
-          <Button name="adfe" variant="outline" size="icon">
+          <Button name="adfe" variant="ghost" size="icon">
             <BellRing className="m-2 h-4 w-4" />
           </Button>
           <ModeToggle />
