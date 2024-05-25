@@ -1,0 +1,25 @@
+{
+  "name": "vox_server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "create": "prisma db push",
+    "prisma_g": "prisma generateush",
+    "prisma_m": "prisma migrate dev",
+    "database": "docker-compose up -d"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "express": "^4.19.2",
+    "prisma": "^5.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "body-parser": "^1.20.2"
+  }
+}
