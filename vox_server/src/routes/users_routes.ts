@@ -1,13 +1,15 @@
-import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
+import { Request, Response, Router } from "express";
+import { createUser, getAllUsers, getUser } from "../controllers/user";
 
 const productRouter = Router();
 
-productRouter.get("/test", (req, res) => {
-  res.send("Product route");
-});
+const prisma = new PrismaClient();
 
-productRouter.get("/:id", (req, res) => {
-  res.send(`Product ${req.params.id}`);
-});
+productRouter.get("/users", getAllUsers);
+
+productRouter.post("/users", createUser);
+
+productRouter.get("/user/:id", getUser);
 
 export default productRouter;
