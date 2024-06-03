@@ -4,6 +4,20 @@ import Button from "@mui/joy/Button";
 import Table from "@mui/joy/Table";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
+import Delete from "@/assets/icons/Delete";
+import {
+  Dropdown,
+  IconButton,
+  ListDivider,
+  ListItemDecorator,
+  Menu,
+  MenuButton,
+  MenuItem,
+} from "@mui/joy";
+import More from "@/assets/icons/More";
+import Moon from "@/assets/icons/moon";
+import Edit from "@/assets/icons/Edit";
+import ArchiveIn from "@/assets/icons/ArchiveIn";
 
 function createData(
   name: string,
@@ -33,7 +47,7 @@ const rows = [
 export default function ActiveLeadManagement() {
   return (
     <>
-      <Box sx={{ minWidth: "349px", maxWidth: "900px" }}>
+      <Box sx={{ width: "100%", background: "transparent" }}>
         <Sheet
           variant="outlined"
           sx={{
@@ -96,10 +110,11 @@ export default function ActiveLeadManagement() {
                 <th style={{ width: 200 }}>Fat&nbsp;(g)</th>
                 <th style={{ width: 200 }}>Carbs&nbsp;(g)</th>
                 <th style={{ width: 200 }}>Protein&nbsp;(g)</th>
-                <th
+                <th style={{ width: 200 }}>Actions</th>
+                {/* <th
                   aria-label="last"
                   style={{ width: "var(--Table-lastColumnWidth)" }}
-                />
+                /> */}
               </tr>
             </thead>
             <tbody>
@@ -112,12 +127,47 @@ export default function ActiveLeadManagement() {
                   <td>{row.protein}</td>
                   <td>
                     <Box sx={{ display: "flex", gap: 1 }}>
-                      <Button size="sm" variant="plain" color="neutral">
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="soft" color="danger">
-                        Delete
-                      </Button>
+                      <Dropdown>
+                        <MenuButton
+                          title="More..."
+                          slots={{ root: IconButton }}
+                          slotProps={{
+                            root: {
+                              variant: "plain",
+                              color: "neutral",
+                              size: "sm",
+                            },
+                          }}
+                        >
+                          <More />
+                        </MenuButton>
+                        <Menu
+                          sx={{ width: "170px" }}
+                          placement="bottom-end"
+                          variant="outlined"
+                          size="sm"
+                        >
+                          <MenuItem>
+                            <ListItemDecorator>
+                              <Edit />
+                            </ListItemDecorator>
+                            Edit post
+                          </MenuItem>
+                          <MenuItem disabled>
+                            <ListItemDecorator>
+                              <ArchiveIn />
+                            </ListItemDecorator>
+                            Draft post
+                          </MenuItem>
+                          <ListDivider />
+                          <MenuItem variant="soft" color="danger">
+                            <ListItemDecorator sx={{ color: "inherit" }}>
+                              <Delete />
+                            </ListItemDecorator>
+                            Delete
+                          </MenuItem>
+                        </Menu>
+                      </Dropdown>
                     </Box>
                   </td>
                 </tr>

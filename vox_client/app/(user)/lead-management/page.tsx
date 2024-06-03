@@ -5,8 +5,13 @@ import Typography from "@mui/joy/Typography";
 import Tabs from "@mui/joy/Tabs";
 import TabList from "@mui/joy/TabList";
 import Tab, { tabClasses } from "@mui/joy/Tab";
-import { TabPanel } from "@mui/joy";
+import { Button, Option, Select, TabPanel, selectClasses } from "@mui/joy";
 import ActiveLeadManagement from "./active";
+import Add from "@/assets/icons/Add";
+import { DownArrow } from "@/assets/icons/Arrow";
+import Filter from "@/assets/icons/Filter";
+import LeadAction from "./lead-action";
+import Inactive from "./in-active";
 
 export default function LeadManagement() {
   return (
@@ -16,13 +21,51 @@ export default function LeadManagement() {
           position: "sticky",
           top: { sm: -50, md: -55, sx: -110 },
           bgcolor: "background.body",
-          zIndex: 9995,
         }}
       >
-        <Box sx={{ px: { xs: 2, md: 6 } }}>
+        <Box sx={{ px: { xs: 2, md: 2 } }}>
           <Typography level="h2" component="h1" sx={{ pt: 1, mb: 2 }}>
             Leads Management
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            m: 2,
+            p: 2,
+            borderRadius: "10px",
+            display: "flex",
+            textAlign: "end",
+            justifyContent: "end",
+            alignItems: "flex-end",
+            background: "#fb923c1a",
+            border: "1px solid #fb923c5c",
+            gap: 2,
+          }}
+        >
+          {" "}
+          <Select
+            placeholder="Filter"
+            indicator={<Filter />}
+            variant="solid"
+            color="primary"
+            size="md"
+            sx={{
+              width: 230,
+              // [`& .${selectClasses.indicator}`]: {
+              //   transition: "0.2s",
+              //   [`&.${selectClasses.expanded}`]: {
+              //     transform: "rotate(-180deg)",
+              //   },
+              // },
+            }}
+          >
+            <Option value="dog">All</Option>
+            <Option value="cat">New</Option>
+            <Option value="fish">Featured</Option>
+            <Option value="bird">Archived</Option>
+          </Select>
+          {/* <Button startDecorator={<Add />}>Add Lead</Button> */}
+          <LeadAction />
         </Box>
         <Tabs
           defaultValue={0}
@@ -68,7 +111,7 @@ export default function LeadManagement() {
             <ActiveLeadManagement />
           </TabPanel>
           <TabPanel value={1}>
-            <ActiveLeadManagement />
+            <Inactive />
           </TabPanel>
           <TabPanel value={2}>
             <ActiveLeadManagement />

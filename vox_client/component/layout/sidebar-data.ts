@@ -1,7 +1,7 @@
 export const sidebar_data = [
   {
-    display_name: "Home",
-    redirect: "/",
+    display_name: "Contact",
+    redirect: "/contact-management",
     icon: "H",
     item: [],
   },

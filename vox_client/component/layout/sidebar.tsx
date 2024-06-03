@@ -19,25 +19,12 @@ import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
 import { closeSidebar } from "@/utility/layout";
 import { sidebar_data } from "./sidebar-data";
-// import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-// import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-// import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-// import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
-// import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-// import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
-// import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-// import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
-// import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-// import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-// import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-// import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded";
-// import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
-// import ColorSchemeToggle from "./ColorSchemeToggle";
-// import { closeSidebar } from "../utils";
 
 import { usePathname } from "next/navigation";
 import ColorSchemeToggle from "../theme/toggle";
+import Org from "@/assets/icons/Org";
+import More from "@/assets/icons/More";
+import { useRouter } from "next/navigation";
 
 function Toggler({
   defaultExpanded = false,
@@ -73,19 +60,20 @@ function Toggler({
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <Sheet
       className="Sidebar"
       sx={{
+        zIndex: { xs: 9999, md: 9 },
         position: { xs: "fixed", md: "sticky" },
         transform: {
           xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
           md: "none",
         },
         transition: "transform 0.4s, width 0.4s",
-        zIndex: 10000,
-        height: "100dvh",
+        height: "100vh",
         width: "var(--Sidebar-width)",
         top: 0,
         p: 2,
@@ -142,11 +130,11 @@ export default function Sidebar() {
           }}
         >
           <IconButton variant="soft" color="success" size="sm">
-            {/* <BrightnessAutoRoundedIcon /> */}VQ
+            <Org />
           </IconButton>
           <Typography level="title-lg">VoxQ Co.</Typography>
         </Box>
-        <ColorSchemeToggle sx={{ ml: "auto" }} />
+        <ColorSchemeToggle />
       </Box>
       <Box
         sx={{
@@ -210,7 +198,10 @@ export default function Sidebar() {
                   >
                     {/* <DashboardRoundedIcon /> */}
                     <ListItemContent>
-                      <Typography level="title-sm">
+                      <Typography
+                        level="title-sm"
+                        onClick={() => router.push(data.redirect)}
+                      >
                         {data.display_name}
                       </Typography>
                     </ListItemContent>
@@ -262,7 +253,7 @@ export default function Sidebar() {
           <Typography level="body-xs">siriwatk@test.com</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
-          {/* <LogoutRoundedIcon /> */}
+          <More />
         </IconButton>
       </Box>
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -271,7 +262,7 @@ export default function Sidebar() {
           <Typography level="body-xs">siriwatk@test.com</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
-          {/* <LogoutRoundedIcon /> */}
+          <More />
         </IconButton>
       </Box>
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -280,7 +271,7 @@ export default function Sidebar() {
           <Typography level="body-xs">siriwatk@test.com</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
-          {/* <LogoutRoundedIcon /> */}
+          <More />
         </IconButton>
       </Box>
     </Sheet>
