@@ -27,7 +27,7 @@ export default function ContactManagement() {
           sx={{
             m: 2,
             p: 2,
-            borderRadius: "10px",
+            borderRadius: "md",
             display: "flex",
             textAlign: "end",
             justifyContent: "end",

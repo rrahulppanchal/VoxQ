@@ -381,8 +381,8 @@ export default function TableSortAndSelection() {
       sx={{
         width: "100%",
         background: "transparent",
-        boxShadow: "sm",
-        borderRadius: "sm",
+        boxShadow: "none",
+        borderRadius: "md",
       }}
     >
       <EnhancedTableToolbar numSelected={selected.length} />

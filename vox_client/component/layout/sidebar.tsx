@@ -25,6 +25,8 @@ import ColorSchemeToggle from "../theme/toggle";
 import Org from "@/assets/icons/Org";
 import More from "@/assets/icons/More";
 import { useRouter } from "next/navigation";
+import Sun from "@/assets/icons/Sun";
+import { DownArrow, UpArrow } from "@/assets/icons/Arrow";
 
 function Toggler({
   defaultExpanded = false,
@@ -165,11 +167,18 @@ export default function Sidebar() {
                       selected={pathname === data.redirect ? true : false}
                       onClick={() => setOpen(!open)}
                     >
-                      {/* <GroupRoundedIcon /> */}
-                      <ListItemContent>
+                      <data.icon />
+                      <ListItemContent
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
                         <Typography level="title-sm">
                           {data.display_name}
                         </Typography>
+                        {open ? <UpArrow /> : <DownArrow />}
                       </ListItemContent>
                       {/* <KeyboardArrowDownIcon
                     sx={{ transform: open ? "rotate(180deg)" : "none" }}
@@ -183,7 +192,14 @@ export default function Sidebar() {
                         <ListItemButton
                           selected={pathname === data.redirect ? true : false}
                         >
-                          {data.display_name}
+                          <data.icon />
+                          <ListItemContent
+                            onClick={() => router.push(data.redirect)}
+                          >
+                            <Typography level="title-sm">
+                              {data.display_name}
+                            </Typography>
+                          </ListItemContent>
                         </ListItemButton>
                       </ListItem>
                     ))}
@@ -196,7 +212,8 @@ export default function Sidebar() {
                   <ListItemButton
                     selected={pathname === data.redirect ? true : false}
                   >
-                    {/* <DashboardRoundedIcon /> */}
+                    {/* <Sun /> */}
+                    <data.icon />
                     <ListItemContent>
                       <Typography
                         level="title-sm"
