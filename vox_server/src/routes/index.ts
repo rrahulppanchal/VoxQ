@@ -3,10 +3,10 @@ import productRouter from "./users_routes";
 
 const MainRouter = Router();
 
-MainRouter.use("*", (req: Request, res: Response) => {
-  res.status(400).send("Service not available !!!");
-});
-
 MainRouter.use(productRouter);
+
+MainRouter.use("**", (req: Request, res: Response) => {
+  res.status(400).send("No Page found !!!");
+});
 
 export default MainRouter;
