@@ -16,7 +16,7 @@ class AuthRouter {
   private initializeRoutes() {
     this.router.get("/auth", this.getAllUsers.bind(this));
     this.router.post(
-      "/users",
+      "/create-user",
       this.userService.createUser.bind(this.userService)
     );
     this.router.get(

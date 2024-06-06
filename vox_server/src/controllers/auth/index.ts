@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { IUserData } from "../../types.ts";
+import ResponseHandler from "../../utils/shared";
 
 class UserService {
   public prisma: PrismaClient;
@@ -10,16 +12,34 @@ class UserService {
 
   public async createUser(req: Request, res: Response) {
     try {
-      const { name, email } = req.body;
-      const user = await this.prisma.user.create({
+      const {
+        user_name,
+        user_email,
+        password,
+        first_name,
+        last_name,
+        user_role,
+      } = req.body as IUserData;
+
+      const user = await this.prisma.tbl_users.create({
         data: {
-          name,
-          email,
+          user_name,
+          user_email,
+          password,
+          first_name,
+          last_name,
+          user_role,
         },
       });
-      res.json(user);
+      const response = new ResponseHandler(
+        user,
+        "User created successfully",
+        200
+      );
+      res.status(response.getStatusCode()).json(response.getResponse());
     } catch (error) {
-      res.status(500).json({ error: "Failed to create user" });
+      const response = new ResponseHandler(null, "Failed to create user", 400);
+      res.status(response.getStatusCode()).json(response.getResponse());
     }
   }
 
@@ -52,4 +72,3 @@ export class AdminUserService extends UserService {
 }
 
 export default UserService;
-// export const adminUserService = new AdminUserService();
