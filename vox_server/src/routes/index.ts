@@ -1,12 +1,29 @@
 import { Request, Response, Router } from "express";
 import productRouter from "./users_routes";
+import authRouter from "./auth_routes";
 
-const MainRouter = Router();
+class MainRouter {
+  private router: Router;
 
-MainRouter.use(productRouter);
+  constructor() {
+    this.router = Router();
+    this.initializeRoutes();
+  }
 
-MainRouter.use("**", (req: Request, res: Response) => {
-  res.status(400).send("No Page found !!!");
-});
+  private initializeRoutes() {
+    this.router.use(productRouter);
+    this.router.use(authRouter);
+    this.router.use("**", this.handleNotFound.bind(this));
+  }
 
-export default MainRouter;
+  private handleNotFound(req: Request, res: Response) {
+    res.status(400).send("No Page found !!!");
+  }
+
+  public getRouter() {
+    return this.router;
+  }
+}
+
+const mainRouter = new MainRouter().getRouter();
+export default mainRouter;

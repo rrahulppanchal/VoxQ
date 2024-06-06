@@ -1,20 +1,33 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import "dotenv/config";
-
 import MainRouter from "./routes";
 
-const app = express();
-app.use(bodyParser.json());
+class Server {
+  private app: express.Application;
+  private port: number | string;
 
-const port = process.env.PORT || 5000;
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT || 5000;
+    this.initializeMiddlewares();
+    this.initializeRoutes();
+    this.startServer();
+  }
 
-// app.use("*", (req: Request, res: Response) => {
-//   res.status(400).send("Hello, World!");
-// });
+  private initializeMiddlewares() {
+    this.app.use(bodyParser.json());
+  }
 
-app.use("/", MainRouter);
+  private initializeRoutes() {
+    this.app.use("/", MainRouter);
+  }
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port} ✈️`);
-});
+  private startServer() {
+    this.app.listen(this.port, () => {
+      console.log(`Server running at http://localhost:${this.port} ✈️`);
+    });
+  }
+}
+
+new Server();
