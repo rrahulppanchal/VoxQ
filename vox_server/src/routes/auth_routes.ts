@@ -1,5 +1,7 @@
 import { Request, Response, Router } from "express";
 import UserService, { AdminUserService } from "../controllers/auth";
+import DataValidator from "../schema/middleware";
+import { userLogInSchema, userSchema } from "../schema/auth_schema";
 
 class AuthRouter {
   private router: Router;
@@ -17,15 +19,17 @@ class AuthRouter {
     this.router.get("/auth", this.getAllUsers.bind(this));
     this.router.post(
       "/create-user",
+      new DataValidator(userSchema).validateData,
       this.userService.createUser.bind(this.userService)
     );
     this.router.get(
       "/autha",
       this.adminUserService.createAdminUser.bind(this.adminUserService)
     );
-    this.router.get(
-      "/authb",
-      this.adminUserService.getUserById.bind(this.adminUserService)
+    this.router.post(
+      "/login",
+      new DataValidator(userLogInSchema).validateData,
+      this.adminUserService.loginUser.bind(this.adminUserService)
     );
   }
 

@@ -33,3 +33,8 @@ model tbl_user_role {
   id    Int     @id @default(autoincrement())
   name  String
 }
+
+model tbl_user_tokens {
+  id             Int     @id
+  refresh_token  String
+}

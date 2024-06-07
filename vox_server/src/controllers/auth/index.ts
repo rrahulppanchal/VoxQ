@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { IUserData } from "../../types.ts";
+import { ILoginInData, IUserData } from "../../types.ts";
 import ResponseHandler from "../../utils/shared";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 class UserService {
   public prisma: PrismaClient;
@@ -12,29 +14,45 @@ class UserService {
 
   public async createUser(req: Request, res: Response) {
     try {
-      const {
-        user_name,
-        user_email,
-        password,
-        first_name,
-        last_name,
-        user_role,
-      } = req.body as IUserData;
+      const reqData = req.body as IUserData;
+
+      const userExists = await this.prisma.tbl_users.findUnique({
+        where: { user_email: reqData.user_email },
+      });
+
+      if (userExists) {
+        const response = new ResponseHandler(null, "User already exists", 409);
+        res.status(response.getStatusCode()).json(response.getResponse());
+        return;
+      }
+      const hashedPassword = await bcrypt.hash(reqData.password, 10);
 
       const user = await this.prisma.tbl_users.create({
         data: {
-          user_name,
-          user_email,
-          password,
-          first_name,
-          last_name,
-          user_role,
+          user_name: reqData.user_name,
+          user_email: reqData.user_email,
+          password: hashedPassword,
+          first_name: reqData.first_name,
+          last_name: reqData.last_name,
+          user_role: reqData.user_role,
         },
       });
+
+      const refreshToken = UserService.generateRefreshToken({
+        id: user.user_id,
+      });
+
+      await this.prisma.tbl_user_tokens.create({
+        data: {
+          id: user.user_id,
+          refresh_token: refreshToken,
+        },
+      });
+
       const response = new ResponseHandler(
         user,
         "User created successfully",
-        200
+        201
       );
       res.status(response.getStatusCode()).json(response.getResponse());
     } catch (error) {
@@ -43,28 +61,75 @@ class UserService {
     }
   }
 
-  public async getUserById(req: Request, res: Response) {
-    console.log(req.params);
-
+  public async loginUser(req: Request, res: Response) {
     try {
-      const { id } = req.params;
-      const user = await this.prisma.user.findMany();
+      const loginData = req.body as ILoginInData;
+      const user = await this.prisma.tbl_users.findUnique({
+        where: { user_email: loginData.email },
+      });
       if (!user) {
-        return res.status(404).json({ error: "User not found" });
+        const response = new ResponseHandler(null, "Invalid email", 400);
+        res.status(response.getStatusCode()).json(response.getResponse());
+        return;
       }
-      res.json(user);
+      const isValidPassword = await bcrypt.compare(
+        loginData.password,
+        user.password
+      );
+      if (!isValidPassword) {
+        const response = new ResponseHandler(null, "Invalid password", 400);
+        res.status(response.getStatusCode()).json(response.getResponse());
+        return;
+      }
+
+      const accessToken = UserService.generateAccessToken({
+        id: user.user_id,
+      });
+
+      const cookieResponse = { accessToken: accessToken, id: user.user_id };
+      res.cookie("token", accessToken, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      }); // 7 days
+
+      const response = new ResponseHandler(
+        cookieResponse,
+        "User logged in successfully",
+        200
+      );
+      res.status(response.getStatusCode()).json(response.getResponse());
     } catch (error) {
-      res.status(500).json({ error: error || "Failed to retrieve user" });
+      const response = new ResponseHandler(null, "Login failed", 400);
+      res.status(response.getStatusCode()).json(response.getResponse());
     }
+  }
+
+  private static generateRefreshToken(user: { id: number }) {
+    return jwt.sign(
+      { id: user.id },
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+  }
+
+  private static generateAccessToken(user: { id: number }) {
+    return jwt.sign(
+      { id: user.id },
+      process.env.REFRESH_TOKEN_SECRET as string,
+      { expiresIn: "1h" }
+    );
   }
 }
 
 export class AdminUserService extends UserService {
   public async createAdminUser(req: Request, res: Response) {
     try {
-      const { name, email, isAdmin } = req.body;
-      const user = await this.prisma.user.findMany();
-      res.json(user);
+      res.clearCookie("token");
+      const response = new ResponseHandler(
+        null,
+        "User looged out succeesfully",
+        200
+      );
+      res.status(response.getStatusCode()).json(response.getResponse());
     } catch (error) {
       res.status(500).json({ error: "Failed to create admin user" });
     }
