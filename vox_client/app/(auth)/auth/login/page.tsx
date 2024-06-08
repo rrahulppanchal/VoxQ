@@ -9,8 +9,8 @@ import {
   Box,
   Button,
   Checkbox,
-  Divider,
   FormControl,
+  FormHelperText,
   FormLabel,
   IconButton,
   Input,
@@ -20,10 +20,47 @@ import {
 } from "@mui/joy";
 import { useState } from "react";
 
+import { useFormik, FormikErrors } from "formik";
+import * as Yup from "yup";
+import { post } from "@/helper/web.requests";
+@/helper/web.requests
+interface FormValues {
+  email: string;
+  password: string;
+}
+
+const validationSchema = Yup.object({
+  email: Yup.string().email("Invalid email address").required("Enter email"),
+  password: Yup.string()
+    .min(3, "Password must be at least 3 characters")
+    .required("Enter password"),
+});
+
 export default function Login() {
   const [getPasswordView, setPasswordView] = useState({
     isPassword: false,
   });
+
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      console.log(values);
+      const data = await post("/login", values);
+      localStorage.setItem("loginData", JSON.stringify(data.data));
+    },
+    validate: (values) => {
+      const errors: FormikErrors<FormValues> = {};
+      if (values.email === "test@email.com") {
+        errors.email = "Nice try!";
+      }
+      return errors;
+    },
+  });
+
   return (
     <>
       <Box
@@ -65,7 +102,6 @@ export default function Login() {
               </IconButton>
               <Typography level="title-lg">VoxQ Co.</Typography>
             </Box>
-            {/* <ColorSchemeToggle /> */}
           </Box>
           <Box
             component="main"
@@ -95,45 +131,11 @@ export default function Login() {
                 <Typography component="h1" level="h3">
                   Log in
                 </Typography>
-                {/* <Typography level="body-sm">
-                  New to company?{" "}
-                  <Link href="#replace-with-a-link" level="title-sm">
-                    Sign up!
-                  </Link>
-                </Typography> */}
               </Stack>
-              {/* <Button
-                variant="soft"
-                color="neutral"
-                fullWidth
-                // startDecorator={<GoogleIcon />}
-              >
-                Continue with Google
-              </Button> */}
             </Stack>
-            {/* <Divider
-              sx={(theme) => ({
-                [theme.getColorSchemeSelector("light")]: {
-                  color: { xs: "#FFF", md: "text.tertiary" },
-                },
-              })}
-            >
-              or
-            </Divider> */}
             <Stack gap={4} sx={{ mt: 0 }}>
-              <form
-                onSubmit={(event: any) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
-                }}
-              >
-                <FormControl required>
+              <form>
+                <FormControl>
                   <FormLabel sx={{ marginLeft: "20px" }}>Email</FormLabel>
                   <Input
                     startDecorator={<Users />}
@@ -141,10 +143,18 @@ export default function Login() {
                     placeholder="Email"
                     type="email"
                     name="email"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
                     sx={{ borderRadius: "50vw" }}
                   />
+                  {formik.touched.email && formik.errors.email ? (
+                    <FormHelperText sx={{ color: "red", marginLeft: "20px" }}>
+                      {formik.errors.email}
+                    </FormHelperText>
+                  ) : null}
                 </FormControl>
-                <FormControl required>
+                <FormControl>
                   <FormLabel sx={{ marginLeft: "20px" }}>Password</FormLabel>
                   <Input
                     startDecorator={<Password />}
@@ -152,6 +162,9 @@ export default function Login() {
                     size="lg"
                     type={getPasswordView.isPassword ? "text" : "password"}
                     name="password"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
                     sx={{ borderRadius: "50vw" }}
                     endDecorator={
                       <IconButton
@@ -168,6 +181,11 @@ export default function Login() {
                       </IconButton>
                     }
                   />
+                  {formik.touched.password && formik.errors.password ? (
+                    <FormHelperText sx={{ color: "red", marginLeft: "20px" }}>
+                      {formik.errors.password}
+                    </FormHelperText>
+                  ) : null}
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Box
@@ -187,6 +205,10 @@ export default function Login() {
                     fullWidth
                     size="lg"
                     sx={{ borderRadius: "50vw" }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      formik.handleSubmit();
+                    }}
                   >
                     Log in
                   </Button>

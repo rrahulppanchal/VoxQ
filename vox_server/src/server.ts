@@ -1,5 +1,7 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
+
 import "dotenv/config";
 import MainRouter from "./routes";
 
@@ -17,6 +19,7 @@ class Server {
 
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
+    this.app.use(cors());
   }
 
   private initializeRoutes() {
