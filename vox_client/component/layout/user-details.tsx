@@ -6,6 +6,7 @@ import Time from "@/assets/icons/Time";
 import {
   Avatar,
   Box,
+  Chip,
   Dropdown,
   IconButton,
   List,
@@ -18,7 +19,9 @@ import {
   MenuButton,
   MenuItem,
   Sheet,
+  Stack,
   Switch,
+  Tooltip,
   Typography,
   sheetClasses,
   switchClasses,
@@ -27,6 +30,8 @@ import { redirect } from "next/navigation";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ILoginData } from "@/types";
+import Help from "@/assets/icons/Help";
+import Warning from "@/assets/icons/Warning";
 
 function UserDetails() {
   const router = useRouter();
@@ -66,8 +71,55 @@ function UserDetails() {
                 fontWeight="xl"
                 id="ios-example-demo"
                 mb={1}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
                 Profile
+                <Tooltip
+                  title={
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        maxWidth: 320,
+                        justifyContent: "center",
+                        p: 1,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItem: "center",
+                          gap: "15px",
+                          width: "100%",
+                        }}
+                      >
+                        <Warning />
+                        <div>
+                          <Typography fontWeight="lg" fontSize="sm">
+                            You need to contact your administrator activate this
+                            account.
+                          </Typography>
+                        </div>
+                      </Box>
+                    </Box>
+                  }
+                  arrow
+                  color="danger"
+                  variant="soft"
+                >
+                  <Chip
+                    color="danger"
+                    variant="soft"
+                    onClick={function () {}}
+                    size="md"
+                  >
+                    Inactive
+                  </Chip>
+                </Tooltip>
               </Typography>
               <List
                 aria-labelledby="ios-example-demo"
@@ -201,7 +253,15 @@ function UserDetails() {
                         size="md"
                         checked
                         color="success"
-                        endDecorator={"Working"}
+                        // endDecorator={
+                        //   <Chip
+                        //     color="success"
+                        //     onClick={function () {}}
+                        //     size="sm"
+                        //   >
+                        //     Working
+                        //   </Chip>
+                        // }
                         sx={(theme) => ({
                           display: "inherit",
                           "--Switch-thumbShadow": `0 0 0 1px ${theme.vars.palette.background.level3}, 0 1px 4px 0 rgb(0 0 0 / 0.3), 0 1px 2px 0px rgb(0 0 0 / 0.3)`,

@@ -26,8 +26,17 @@ import Org from "@/assets/icons/Org";
 import More from "@/assets/icons/More";
 import { useRouter } from "next/navigation";
 import Sun from "@/assets/icons/Sun";
-import { DownArrow, UpArrow } from "@/assets/icons/Arrow";
+import { DownArrow, RightArrow, UpArrow } from "@/assets/icons/Arrow";
 import UserDetails from "./user-details";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+  accordionClasses,
+  accordionDetailsClasses,
+  accordionSummaryClasses,
+} from "@mui/joy";
 
 function Toggler({
   defaultExpanded = false,
@@ -159,6 +168,74 @@ export default function Sidebar() {
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
+          <ListItem>
+            <AccordionGroup
+              variant="outlined"
+              transition="0.2s"
+              sx={{
+                maxWidth: 400,
+                height: "175px",
+                borderRadius: "sm",
+                [`& .${accordionSummaryClasses.button}:hover`]: {
+                  bgcolor: "transparent",
+                },
+                [`& .${accordionDetailsClasses.content}`]: {
+                  boxShadow: (theme) =>
+                    `inset 0 1px ${theme.vars.palette.divider}`,
+                  [`&.${accordionDetailsClasses.expanded}`]: {
+                    paddingBlock: "0.75rem",
+                  },
+                },
+              }}
+            >
+              <Accordion defaultExpanded>
+                <AccordionSummary>Quick Links</AccordionSummary>
+                <AccordionDetails variant="plain">
+                  <Button
+                    size="sm"
+                    variant="plain"
+                    color="neutral"
+                    sx={{
+                      display: "flex",
+                      alignItem: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span>Add Lead</span>
+                    <RightArrow />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="plain"
+                    color="neutral"
+                    sx={{
+                      display: "flex",
+                      alignItem: "center",
+                      justifyContent: "space-between",
+                      mt: 1,
+                    }}
+                  >
+                    <span>Add Contact</span>
+                    <RightArrow />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="plain"
+                    color="neutral"
+                    sx={{
+                      display: "flex",
+                      alignItem: "center",
+                      justifyContent: "space-between",
+                      mt: 1,
+                    }}
+                  >
+                    <span>Change Log</span>
+                    <RightArrow />
+                  </Button>
+                </AccordionDetails>
+              </Accordion>
+            </AccordionGroup>
+          </ListItem>
           {sidebar_data.map((data, index) =>
             data?.item.length ? (
               <ListItem key={index} nested>
@@ -259,6 +336,7 @@ export default function Sidebar() {
           </Button>
         </Card> */}
       </Box>
+
       <Divider />
       <UserDetails />
     </Sheet>

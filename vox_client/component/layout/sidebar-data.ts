@@ -33,21 +33,21 @@ export const sidebar_data = [
       },
     ],
   },
-  {
-    display_name: "List",
-    redirect: "/",
-    icon: "H",
-    item: [
-      {
-        display_name: "Test 1",
-        redirect: "/",
-        icon: "H",
-      },
-      {
-        display_name: "Test 2",
-        redirect: "/",
-        icon: "H",
-      },
-    ],
-  },
+  // {
+  //   display_name: "List",
+  //   redirect: "/",
+  //   icon: "H",
+  //   item: [
+  //     {
+  //       display_name: "Test 1",
+  //       redirect: "/",
+  //       icon: "H",
+  //     },
+  //     {
+  //       display_name: "Test 2",
+  //       redirect: "/",
+  //       icon: "H",
+  //     },
+  //   ],
+  // },
 ];
