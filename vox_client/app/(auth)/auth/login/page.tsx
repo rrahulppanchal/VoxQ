@@ -23,7 +23,6 @@ import { useState } from "react";
 import { useFormik, FormikErrors } from "formik";
 import * as Yup from "yup";
 import { post } from "@/helper/web.requests";
-@/helper/web.requests
 interface FormValues {
   email: string;
   password: string;

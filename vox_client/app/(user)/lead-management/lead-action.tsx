@@ -169,18 +169,18 @@ export default function LeadAction() {
                   <Stack direction="row" spacing={1} marginTop={2}>
                     <CommonButton
                       name="Cancel"
-                      color="primary"
+                      // color="primary"
                       type="submit"
                       rounded
-                      variant="outlined"
-                      onClick={() => setLayout(undefined)}
+                      // variant="outlined"
+                      // onClick={() => setLayout(undefined)}
                     />
                     <CommonButton
                       name="Save Lead"
-                      color="primary"
+                      // color="primary"
                       type="submit"
                       rounded
-                      variant="solid"
+                      // variant="solid"
                     />
                   </Stack>
                   <Stack

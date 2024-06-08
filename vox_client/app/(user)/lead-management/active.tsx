@@ -15,7 +15,7 @@ import {
   MenuItem,
 } from "@mui/joy";
 import More from "@/assets/icons/More";
-import Moon from "@/assets/icons/moon";
+import Moon from "@/assets/icons/Moon";
 import Edit from "@/assets/icons/Edit";
 import ArchiveIn from "@/assets/icons/ArchiveIn";
 

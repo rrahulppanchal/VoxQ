@@ -38,16 +38,16 @@ class UserService {
         },
       });
 
-      const refreshToken = UserService.generateRefreshToken({
-        id: user.user_id,
-      });
+      // const refreshToken = UserService.generateRefreshToken({
+      //   id: user.user_id,
+      // });
 
-      await this.prisma.tbl_user_tokens.create({
-        data: {
-          id: user.user_id,
-          refresh_token: refreshToken,
-        },
-      });
+      // await this.prisma.tbl_user_tokens.create({
+      //   data: {
+      //     id: user.user_id,
+      //     refresh_token: refreshToken,
+      //   },
+      // });
 
       const response = new ResponseHandler(
         user,
@@ -82,10 +82,21 @@ class UserService {
         return;
       }
 
-      const accessToken = UserService.generateAccessToken({
+      const accessToken = UserService.generateRefreshToken({
         id: user.user_id,
       });
 
+      const userResponse = {
+        accessToken: accessToken,
+        id: user.user_id,
+        userName: user.user_name,
+        email: user.user_email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        userRole: user.user_role,
+        created: user.created_at,
+        updated: user.updated_at,
+      };
       const cookieResponse = { accessToken: accessToken, id: user.user_id };
       res.cookie("token", accessToken, {
         httpOnly: true,
@@ -93,7 +104,7 @@ class UserService {
       }); // 7 days
 
       const response = new ResponseHandler(
-        cookieResponse,
+        userResponse,
         "User logged in successfully",
         200
       );

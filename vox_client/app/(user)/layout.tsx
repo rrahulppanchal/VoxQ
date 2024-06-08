@@ -5,6 +5,7 @@ import Sidebar from "@/component/layout/sidebar";
 import { Box, Grid, Stack } from "@mui/joy";
 import { Inter } from "next/font/google";
 import { redirect } from "next/navigation";
+import { useLayoutEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,10 +14,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const loginData = JSON.parse(localStorage.getItem("loginData") as string);
-  if (!loginData?.accessToken) {
-    redirect("/auth/login");
-  }
+  useLayoutEffect(() => {
+    const loginData = JSON.parse(localStorage.getItem("loginData") as string);
+    if (!loginData?.accessToken) {
+      redirect("/auth/login");
+    }
+  }, []);
   return (
     <html lang="en">
       <body className={inter.className}>

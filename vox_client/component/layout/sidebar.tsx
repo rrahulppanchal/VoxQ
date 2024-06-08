@@ -27,6 +27,7 @@ import More from "@/assets/icons/More";
 import { useRouter } from "next/navigation";
 import Sun from "@/assets/icons/Sun";
 import { DownArrow, UpArrow } from "@/assets/icons/Arrow";
+import UserDetails from "./user-details";
 
 function Toggler({
   defaultExpanded = false,
@@ -259,38 +260,7 @@ export default function Sidebar() {
         </Card> */}
       </Box>
       <Divider />
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Avatar
-          variant="outlined"
-          size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-        />
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
-        </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
-          <More />
-        </IconButton>
-      </Box>
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
-        </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
-          <More />
-        </IconButton>
-      </Box>
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
-        </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
-          <More />
-        </IconButton>
-      </Box>
+      <UserDetails />
     </Sheet>
   );
 }
