@@ -3,6 +3,7 @@ import Filter from "@/assets/icons/Filter";
 import SearchUser from "@/assets/icons/SearchUser";
 import { Box, Button, Divider, Input, Typography } from "@mui/joy";
 import UsersTable from "./users-table";
+import OperationsActionsModal from "./operations-actions-modal";
 
 export default function Users() {
   return (
@@ -20,6 +21,7 @@ export default function Users() {
             borderRadius: "md",
             display: "flex",
             textAlign: "end",
+            flexWrap: "wrap",
             justifyContent: "end",
             alignItems: "flex-end",
             background: "#fb923c1a",
@@ -35,7 +37,8 @@ export default function Users() {
             endDecorator={<Button>Search</Button>}
           />
           <Button endDecorator={<Filter />}>Filter Users</Button>
-          <Button startDecorator={<Add />}>Add User</Button>
+
+          <OperationsActionsModal />
         </Box>
         <Divider />
         <Box

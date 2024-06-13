@@ -77,7 +77,7 @@ export default function LeadAction() {
           filter: "saturate(1)",
         }}
       >
-        <ModalOverflow sx={{ bgcolor: "transparent" }}>
+        <ModalOverflow>
           <ModalDialog aria-labelledby="modal-dialog-overflow" layout={layout}>
             <ModalClose />
             <Typography id="modal-dialog-overflow" level="h2">

@@ -12,6 +12,7 @@ interface CommonInputProps {
   placeholder?: string;
   helperText?: string;
   error?: boolean;
+  endDecorator?: React.ReactNode;
   formik?: FormikProps<any> | undefined;
 }
 
@@ -22,6 +23,7 @@ const CommonInput: React.FC<CommonInputProps> = ({
   placeholder = "Placeholder",
   helperText = "",
   error,
+  endDecorator,
   formik,
   ...props
 }) => {
@@ -40,9 +42,19 @@ const CommonInput: React.FC<CommonInputProps> = ({
     <FormControl error={isError} sx={{ width: "100%" }}>
       {label && <FormLabel>{label}</FormLabel>}
       <Input
+        sx={{
+          "&::before": {
+            display: "none",
+          },
+          "&:focus-within": {
+            outline: "2px solid var(--Input-focusedHighlight)",
+            outlineOffset: "2px",
+          },
+        }}
         name={name}
         type={type}
         placeholder={placeholder}
+        endDecorator={endDecorator}
         {...fieldProps}
         {...props}
       />

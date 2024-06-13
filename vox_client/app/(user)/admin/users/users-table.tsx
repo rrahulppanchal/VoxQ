@@ -1,43 +1,88 @@
 import * as React from "react";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
+import {
+  Chip,
+  Dropdown,
+  IconButton,
+  ListDivider,
+  ListItemDecorator,
+  Menu,
+  MenuButton,
+  MenuItem,
+} from "@mui/joy";
+import More from "@/assets/icons/More";
+import Edit from "@/assets/icons/Edit";
+import Delete from "@/assets/icons/Delete";
 
 function createData(
   name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
+  email: string,
+  role: string,
+  phone: string,
+  j_date: string,
+  l_date: string,
+  isActive: string
 ) {
-  return { name, calories, fat, carbs, protein };
+  return { name, email, role, phone, j_date, l_date, isActive };
 }
 
 const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData(
+    "John Doe",
+    "johndoe@email.com",
+    "Admin",
+    "+91 9999999999",
+    "15/12/2022",
+    "15/12/2024",
+    "Active"
+  ),
+  createData(
+    "John Doe",
+    "johndoe@email.com",
+    "Admin",
+    "+91 9999999999",
+    "15/12/2022",
+    "15/12/2024",
+    "Inactive"
+  ),
+  createData(
+    "John Doe",
+    "johndoe@email.com",
+    "Admin",
+    "+91 9999999999",
+    "15/12/2022",
+    "15/12/2024",
+    "Active"
+  ),
+  createData(
+    "John Doe",
+    "johndoe@email.com",
+    "Admin",
+    "+91 9999999999",
+    "15/12/2022",
+    "15/12/2024",
+    "Inactive"
+  ),
 ];
 
 export default function UsersTable() {
   return (
-    <Sheet variant="outlined" sx={{ borderRadius: "md" }}>
+    <Sheet
+      variant="outlined"
+      sx={{ borderRadius: "md", width: "100%", overflowY: "auto" }}
+    >
       <Table variant="plain" borderAxis="bothBetween" color="neutral" size="lg">
         <thead>
           <tr>
-            <th style={{ width: "40%" }}>User</th>
+            <th>User</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Carbs&nbsp;(g)</th>
-            <th>Protein&nbsp;(g)</th>
-            <th>Actions</th>
+            <th>Role</th>
+            <th>Joining Date</th>
+            <th>Leaving Date</th>
+            <th>Activity</th>
+            <th style={{ width: "90px" }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -45,11 +90,54 @@ export default function UsersTable() {
             <tr key={row.name}>
               {/* <th scope="row">{row.name}</th> */}
               <td>{row.name}</td>
-              <td>{row.calories}</td>
-              <td>{row.fat}</td>
-              <td>{row.carbs}</td>
-              <td>{row.protein}</td>
-              <td>...</td>
+              <td>{row.email}</td>
+              <td>{row.phone}</td>
+              <td>{row.role}</td>
+              <td>{row.j_date}</td>
+              <td>{row.l_date}</td>
+              <td>
+                <Chip
+                  color={row.isActive === "Active" ? "success" : "danger"}
+                  disabled={false}
+                  // onClick={function () {}}
+                  size="md"
+                  variant="soft"
+                >
+                  {row.isActive}
+                </Chip>
+              </td>
+              <td>
+                {" "}
+                <Dropdown>
+                  <MenuButton
+                    slots={{ root: IconButton }}
+                    slotProps={{
+                      root: { variant: "plain", color: "neutral" },
+                    }}
+                  >
+                    <More />
+                  </MenuButton>
+                  <Menu placement="bottom-end">
+                    <MenuItem>
+                      <ListItemDecorator>
+                        <Edit />
+                      </ListItemDecorator>{" "}
+                      Edit post
+                    </MenuItem>
+                    <MenuItem disabled>
+                      <ListItemDecorator />
+                      Draft post
+                    </MenuItem>
+                    <ListDivider />
+                    <MenuItem variant="soft" color="danger">
+                      <ListItemDecorator sx={{ color: "inherit" }}>
+                        <Delete />
+                      </ListItemDecorator>{" "}
+                      Delete
+                    </MenuItem>
+                  </Menu>
+                </Dropdown>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -59,8 +147,10 @@ export default function UsersTable() {
             <th></th>
             <th></th>
             <th></th>
-            <th>Email</th>
-            <th>Phone</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
           </tr>
         </tfoot>
       </Table>

@@ -168,22 +168,24 @@ export default function Sidebar() {
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
-          <ListItem>
+          <ListItem sx={{ padding: " 0.75rem 0 0.75rem 0" }}>
             <AccordionGroup
               variant="outlined"
               transition="0.2s"
               sx={{
                 maxWidth: 400,
-                height: "175px",
+                height: "100%",
+                overflow: "auto",
                 borderRadius: "sm",
                 [`& .${accordionSummaryClasses.button}:hover`]: {
                   bgcolor: "transparent",
+                  borderRadius: "sm",
                 },
                 [`& .${accordionDetailsClasses.content}`]: {
                   boxShadow: (theme) =>
                     `inset 0 1px ${theme.vars.palette.divider}`,
                   [`&.${accordionDetailsClasses.expanded}`]: {
-                    paddingBlock: "0.75rem",
+                    padding: " 0.75rem 0 0.75rem 0",
                   },
                 },
               }}
@@ -199,6 +201,7 @@ export default function Sidebar() {
                       display: "flex",
                       alignItem: "center",
                       justifyContent: "space-between",
+                      borderRadius: "0",
                     }}
                   >
                     <span>Add Lead</span>
@@ -213,6 +216,7 @@ export default function Sidebar() {
                       alignItem: "center",
                       justifyContent: "space-between",
                       mt: 1,
+                      borderRadius: "0",
                     }}
                   >
                     <span>Add Contact</span>
@@ -227,6 +231,7 @@ export default function Sidebar() {
                       alignItem: "center",
                       justifyContent: "space-between",
                       mt: 1,
+                      borderRadius: "0",
                     }}
                   >
                     <span>Change Log</span>

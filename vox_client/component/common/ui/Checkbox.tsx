@@ -5,6 +5,7 @@ interface CommonCheckBoxProps {
   label?: string;
   type?: string;
   rounded?: boolean;
+  checked?: boolean;
 }
 
 const CommonCheckBox: React.FC<CommonCheckBoxProps> = ({
@@ -12,6 +13,7 @@ const CommonCheckBox: React.FC<CommonCheckBoxProps> = ({
   type = "submit",
   label = "Check Box",
   rounded = false,
+  checked = false,
   ...props
 }) => {
   return (
@@ -26,7 +28,7 @@ const CommonCheckBox: React.FC<CommonCheckBoxProps> = ({
         }}
       >
         <Sheet variant="outlined">
-          <Checkbox overlay label={label} {...props} />
+          <Checkbox overlay label={label} checked={checked} {...props} />
         </Sheet>
       </Box>
     </>
