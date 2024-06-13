@@ -20,8 +20,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
+    <html lang="en" suppressHydrationWarning={true}>
+      <body suppressHydrationWarning={true} className={cn('min-h-screen bg-background font-sans antialiased')}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           {/* <Toaster /> */}

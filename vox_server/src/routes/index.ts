@@ -1,0 +1,35 @@
+import { NextFunction, Request, Response, Router } from "express";
+import productRouter from "./users_routes";
+import authRouter from "./auth_routes";
+import jwt from "jsonwebtoken";
+import { PrismaClient } from "@prisma/client";
+import AuthValidator from "../schema/middleware/token_authentication";
+
+class MainRouter {
+  public prisma: PrismaClient;
+  private router: Router;
+
+  constructor() {
+    this.router = Router();
+    this.prisma = new PrismaClient();
+    this.initializeRoutes();
+  }
+
+  private initializeRoutes() {
+    this.router.use(productRouter);
+    // this.router.use(new AuthValidator().authValidator, authRouter);
+    this.router.use(authRouter);
+    this.router.use("**", this.handleNotFound.bind(this));
+  }
+
+  private handleNotFound(req: Request, res: Response, next: NextFunction) {
+    res.status(400).send("No Page found !!!");
+  }
+
+  public getRouter() {
+    return this.router;
+  }
+}
+
+const mainRouter = new MainRouter().getRouter();
+export default mainRouter;

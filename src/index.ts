@@ -1,22 +1,24 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
-import { startStandaloneServer } from '@apollo/server/standalone';
-import { ApolloServer } from '@apollo/server';
-import { resolvers } from './resolvers';
+import { ApolloServer } from "apollo-server-express";
+import Schema from "./graphql/Schema";
+import Resolvers from "./graphql/Resolvers";
+import express from "express";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import http from "http";
 
-type ApolloContext = {};
-
-const GRAPHQL_SCHEMA_PATH = resolve(__dirname, 'schema.graphql');
-
-const typeDefs = readFileSync(GRAPHQL_SCHEMA_PATH, { encoding: 'utf-8' });
-
-const server = new ApolloServer<ApolloContext>({
-  typeDefs,
-  resolvers,
-});
-
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-}).then((result) => {
-  console.log(`🚀 Server ready at: ${result.url}`);
-});
+async function startApolloServer(schema: any, resolvers: any) {
+  const app = express();
+  const httpServer = http.createServer(app);
+  const server = new ApolloServer({
+    typeDefs: schema,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  }) as any;
+  await server.start();
+  server.applyMiddleware({ app });
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: 4000 }, resolve)
+  );
+  console.log(`Server ready at http://localhost:4000${server.graphqlPath}`);
+}
+startApolloServer(Schema, Resolvers);
+////npx nodemon src/index.ts
