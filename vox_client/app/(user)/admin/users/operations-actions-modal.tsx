@@ -1,160 +1,106 @@
 "use client";
 import * as React from "react";
+import * as Yup from "yup";
+
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
-import Switch from "@mui/joy/Switch";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
 import Modal from "@mui/joy/Modal";
-import ModalClose from "@mui/joy/ModalClose";
-import ModalDialog, { ModalDialogProps } from "@mui/joy/ModalDialog";
+import ModalDialog from "@mui/joy/ModalDialog";
 import ModalOverflow from "@mui/joy/ModalOverflow";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
-import Add from "@/assets/icons/Add";
-import CommonButton from "@/component/common/ui/Button";
 import CommonCheckBox from "@/component/common/ui/Checkbox";
 import CommonSelect from "@/component/common/ui/Select";
 import CommonInput from "@/component/common/ui/Input";
 import { Form, Formik } from "formik";
-import {
-  ButtonGroup,
-  Divider,
-  FormHelperText,
-  Grid,
-  IconButton,
-  Menu,
-  MenuItem,
-  Textarea,
-} from "@mui/joy";
+import { Divider, FormHelperText, Grid, IconButton, Textarea } from "@mui/joy";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import OnEye from "@/assets/icons/OnEye";
 import OffEye from "@/assets/icons/OffEye";
-import { DownArrow } from "@/assets/icons/Arrow";
+import dayjs from "dayjs";
 
 interface FormValues {
   email: string;
-  movies: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  password: string;
+  phone: string;
+  userRole: number | null;
+  jDate: Date | string;
+  lDate: Date | string;
+  isActive: boolean;
+  userDescription: string;
 }
 
-const options = ["Add New User", "Import Users"];
+interface Props {
+  isModalOpen: boolean;
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentStateData: any;
+}
 
-export default function OperationsActionsModal() {
-  const [layout, setLayout] = React.useState<
-    ModalDialogProps["layout"] | undefined
-  >(undefined);
+const userSchema = Yup.object().shape({
+  firstName: Yup.string().required("Enter first name"),
+  lastName: Yup.string().required("Enter last name"),
+  userName: Yup.string().required("Enter username"),
+  password: Yup.string().required("Enter password"),
+  phone: Yup.string().required("Enter phone"),
+  userRole: Yup.number().required("Select user role"),
+  jDate: Yup.string().required("Select joining date"),
+  lDate: Yup.string().required("Select leaving date"),
+  email: Yup.string().email("Invalid email").required("Enter email"),
+});
+
+const OperationsActionsModal: React.FC<Props> = ({
+  isModalOpen,
+  setModalOpen,
+  currentStateData,
+}) => {
   const [getPasswordView, setPasswordView] = React.useState({
     isPassword: false,
   });
-  const [open, setOpen] = React.useState(false);
-  const actionRef = React.useRef<() => void | null>(null);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
 
-  const handleClick = () => {
-    if (options[selectedIndex] === "Add New User") {
-      setLayout("center");
-    }
+  console.log(currentStateData);
+
+  const initialValues: FormValues = {
+    email: currentStateData ? currentStateData?.email : "",
+    firstName: currentStateData ? currentStateData?.firstName : "",
+    lastName: currentStateData ? currentStateData?.lastName : "",
+    userName: currentStateData ? currentStateData?.userName : "",
+    password: "",
+    phone: currentStateData ? currentStateData?.phone : "",
+    userRole: null,
+    jDate: currentStateData
+      ? dayjs(currentStateData?.jDate).format("YYYY-MM-DD")
+      : "",
+    lDate: currentStateData
+      ? dayjs(currentStateData?.lDate).format("YYYY - MM - DD")
+      : "",
+    isActive: currentStateData ? currentStateData?.isActive : false,
+    userDescription: currentStateData ? currentStateData?.userDescription : "",
   };
 
-  const handleMenuItemClick = (
-    event: React.MouseEvent<HTMLElement, MouseEvent>,
-    index: number
-  ) => {
-    setSelectedIndex(index);
-    setOpen(false);
-  };
-
-  const initialValues: FormValues = { email: "", movies: "" };
-
-  const validate = (values: FormValues) => {
-    const errors: Partial<FormValues> = {};
-    // if (!values.email) {
-    //   errors.email = "Required";
-    // } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-    //   errors.email = "Invalid email address";
-    // }
-    // if (!values.movies) {
-    //   errors.movies = "Required";
-    // }
-    // return errors;
-  };
   return (
     <React.Fragment>
-      <Stack direction="row" spacing={1}>
-        {/* <Button
-          startDecorator={<Add />}
-          onClick={() => {
-            setLayout("center");
-          }}
-        >
-          Add User
-        </Button> */}
-        <ButtonGroup
-          ref={anchorRef}
-          variant="solid"
-          color="primary"
-          aria-label="split button"
-        >
-          <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-          <IconButton
-            aria-controls={open ? "split-button-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-label="select merge strategy"
-            aria-haspopup="menu"
-            onMouseDown={() => {
-              // @ts-ignore
-              actionRef.current = () => setOpen(!open);
-            }}
-            onKeyDown={() => {
-              // @ts-ignore
-              actionRef.current = () => setOpen(!open);
-            }}
-            onClick={() => {
-              actionRef.current?.();
-            }}
-          >
-            <DownArrow />
-          </IconButton>
-        </ButtonGroup>
-        <Menu
-          open={open}
-          onClose={() => setOpen(false)}
-          anchorEl={anchorRef.current}
-        >
-          {options.map((option, index) => (
-            <MenuItem
-              key={option}
-              disabled={index === 2}
-              selected={index === selectedIndex}
-              onClick={(event) => handleMenuItemClick(event, index)}
-            >
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
-      </Stack>
       <Modal
-        open={!!layout}
-        onClose={() => {
-          // setLayout(undefined);
-        }}
+        open={isModalOpen}
+        onClose={() => {}}
         sx={{
           bgcolor: "transparent",
           filter: "saturate(1)",
         }}
       >
         <ModalOverflow>
-          <ModalDialog aria-labelledby="modal-dialog-overflow" layout={layout}>
+          <ModalDialog aria-labelledby="modal-dialog-overflow" layout="center">
             <Typography id="modal-dialog-overflow" level="h2">
-              Add User
-              {/* <ModalClose /> */}
+              {currentStateData ? "Edit User" : "Add User"}
             </Typography>
             <Divider />
             <Formik
+              enableReinitialize
               initialValues={initialValues}
-              validate={validate}
+              validationSchema={userSchema}
               onSubmit={(values) => console.log(values)}
             >
               {(formik) => (
@@ -238,37 +184,67 @@ export default function OperationsActionsModal() {
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid xs={12} sm={6} md={6} marginBottom="5px">
-                      <FormControl>
+                      <FormControl
+                        error={
+                          formik?.touched.jDate && formik?.errors.jDate
+                            ? true
+                            : false
+                        }
+                      >
                         <FormLabel>Joining Date</FormLabel>
                         <DatePicker
+                          name="jDate"
+                          value={dayjs(formik.values.jDate)}
                           slotProps={{
                             textField: {
                               size: "small",
                               placeholder: "Select date",
+                              error:
+                                formik?.touched.jDate && formik?.errors.jDate
+                                  ? true
+                                  : false,
                             },
                           }}
+                          onChange={(newValue: dayjs.Dayjs | null) => {
+                            formik.setFieldValue("jDate", newValue);
+                          }}
                         />
-                        {false && (
+                        {formik?.touched.jDate && formik?.errors.jDate && (
                           <FormHelperText>
-                            This is a helper text.
+                            {formik?.errors.jDate as string}
                           </FormHelperText>
                         )}
                       </FormControl>
                     </Grid>
                     <Grid xs={12} sm={6} md={6} marginBottom="5px">
-                      <FormControl>
+                      <FormControl
+                        error={
+                          formik?.touched.lDate && formik?.errors.lDate
+                            ? true
+                            : false
+                        }
+                      >
                         <FormLabel>Leaving Date</FormLabel>
                         <DatePicker
+                          name="lDate"
+                          value={dayjs(formik.values.lDate)}
                           slotProps={{
                             textField: {
                               size: "small",
                               placeholder: "Select date",
+                              error:
+                                formik?.touched.lDate && formik?.errors.lDate
+                                  ? true
+                                  : false,
                             },
                           }}
+                          onChange={(newValue: dayjs.Dayjs | null) => {
+                            formik.setFieldValue("lDate", newValue);
+                          }}
                         />
-                        {false && (
+                        {formik?.touched.lDate && formik?.errors.lDate && (
                           <FormHelperText>
-                            This is a helper text.
+                            {formik?.errors.lDate as string}
                           </FormHelperText>
                         )}
                       </FormControl>
@@ -288,7 +264,13 @@ export default function OperationsActionsModal() {
                     <Grid xs={12} sm={6} md={6}>
                       <FormControl>
                         <FormLabel>Activity</FormLabel>
-                        <CommonCheckBox label="Active" checked />
+                        <CommonCheckBox
+                          label="isActive"
+                          checked={formik.values.isActive}
+                          onChange={(e: any) => {
+                            formik.setFieldValue("isActive", e.target.checked);
+                          }}
+                        />
                         {false && (
                           <FormHelperText>
                             This is a helper text.
@@ -303,6 +285,7 @@ export default function OperationsActionsModal() {
                         <FormLabel>User description</FormLabel>
                         <Textarea
                           placeholder="User description..."
+                          name="userDescription"
                           minRows={2}
                           sx={{
                             "&::before": {
@@ -313,6 +296,13 @@ export default function OperationsActionsModal() {
                                 "2px solid var(--Textarea-focusedHighlight)",
                               outlineOffset: "2px",
                             },
+                          }}
+                          value={formik.values.userDescription}
+                          onChange={(e) => {
+                            formik.setFieldValue(
+                              "userDescription",
+                              e.target.value
+                            );
                           }}
                         />
                         {false && (
@@ -337,10 +327,10 @@ export default function OperationsActionsModal() {
                       <Button
                         sx={{ width: "100%", borderRadius: "50vw" }}
                         name="Cancel"
-                        color="primary"
+                        color="neutral"
                         type="submit"
                         variant="outlined"
-                        onClick={() => setLayout(undefined)}
+                        onClick={() => setModalOpen(false)}
                       >
                         Cancel
                       </Button>
@@ -364,4 +354,6 @@ export default function OperationsActionsModal() {
       </Modal>
     </React.Fragment>
   );
-}
+};
+
+export default OperationsActionsModal;
