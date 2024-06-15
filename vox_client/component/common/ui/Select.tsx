@@ -44,7 +44,7 @@ const CommonSelect: React.FC<CommonSelectProps> = ({
 
   const handleChange = (event: React.ChangeEvent<{}>, value: any) => {
     if (formik) {
-      formik.setFieldValue(name, value.value);
+      formik.setFieldValue(name, value?.value || null);
       formik.setFieldTouched(name, true, false);
     }
     if (onChange) {

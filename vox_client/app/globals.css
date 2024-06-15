@@ -143,3 +143,29 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: grey;
 }
+
+.MuiAutocomplete-root::before {
+  display: none;
+}
+
+.MuiAutocomplete-root:focus-within {
+  outline: 2px solid var(--Input-focusedHighlight);
+  outline-offset: 2px;
+}
+
+.MuiOutlinedInput-root:hover {
+  outline: none;
+}
+
+.MuiOutlinedInput-root.Mui-focused {
+  outline: 2px solid var(--Input-focusedHighlight);
+  outline-offset: 2px;
+}
+
+.MuiDrawer-backdrop {
+  backdrop-filter: blur(0);
+}
+
+.pointer {
+  cursor: pointer;
+}
