@@ -18,6 +18,8 @@ import UsersTable from "./users-table";
 import OperationsActionsModal from "./operations-actions-modal";
 import { useRef, useState } from "react";
 import { DownArrow } from "@/assets/icons/Arrow";
+import ConfirmationModal from "../../../../component/common/ui/confirmation-modal";
+import ChangePassword from "./change-password";
 
 const options = ["Add New User", "Import Users"];
 
@@ -28,7 +30,10 @@ export default function Users() {
   const [open, setOpen] = useState(false);
   const [isOperationModalOpen, setOperationModal] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [getCurrentUserData, setCurrentUserData] = useState();
+  const [getCurrentUserData, setCurrentUserData] = useState<any>();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isChangePassModalOpen, setIsChangePassModalOpen] =
+    useState<boolean>(false);
 
   const handleClick = () => {
     if (options[selectedIndex] === "Add New User") {
@@ -47,6 +52,16 @@ export default function Users() {
   const editAction = (data: any): void | undefined => {
     setOperationModal(true);
     setCurrentUserData(data);
+  };
+
+  const deleteAction = (data: any): void | undefined => {
+    setIsDeleteModalOpen(true);
+    console.log(data);
+  };
+
+  const changePasswordAction = (data: any): void | undefined => {
+    setIsChangePassModalOpen(true);
+    console.log(data);
   };
 
   return (
@@ -133,13 +148,26 @@ export default function Users() {
             m: 2,
           }}
         >
-          <UsersTable editAction={editAction} />
+          <UsersTable
+            editAction={editAction}
+            deleteAction={deleteAction}
+            changePasswordAction={changePasswordAction}
+          />
         </Box>
       </Box>
       <OperationsActionsModal
         currentStateData={getCurrentUserData}
         isModalOpen={isOperationModalOpen}
         setModalOpen={setOperationModal}
+        setCurrentUserData={setCurrentUserData}
+      />
+      <ConfirmationModal
+        open={isDeleteModalOpen}
+        setOpen={setIsDeleteModalOpen}
+      />
+      <ChangePassword
+        open={isChangePassModalOpen}
+        setOpen={setIsChangePassModalOpen}
       />
     </>
   );

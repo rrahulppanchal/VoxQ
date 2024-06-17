@@ -37,6 +37,7 @@ interface FormValues {
 interface Props {
   isModalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentUserData: React.Dispatch<React.SetStateAction<any>>;
   currentStateData: any;
 }
 
@@ -56,6 +57,7 @@ const OperationsActionsModal: React.FC<Props> = ({
   isModalOpen,
   setModalOpen,
   currentStateData,
+  setCurrentUserData,
 }) => {
   const [getPasswordView, setPasswordView] = React.useState({
     isPassword: false,
@@ -75,7 +77,7 @@ const OperationsActionsModal: React.FC<Props> = ({
       ? dayjs(currentStateData?.jDate).format("YYYY-MM-DD")
       : "",
     lDate: currentStateData
-      ? dayjs(currentStateData?.lDate).format("YYYY - MM - DD")
+      ? dayjs(currentStateData?.lDate).format("YYYY-MM-DD")
       : "",
     isActive: currentStateData ? currentStateData?.isActive : false,
     userDescription: currentStateData ? currentStateData?.userDescription : "",
@@ -142,32 +144,36 @@ const OperationsActionsModal: React.FC<Props> = ({
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid xs={12} sm={6} md={6}>
-                      <CommonInput
-                        name="password"
-                        label="Password"
-                        type={getPasswordView.isPassword ? "text" : "password"}
-                        formik={formik}
-                        placeholder="Password"
-                        endDecorator={
-                          <IconButton
-                            variant="soft"
-                            sx={{ borderRadius: "50vw" }}
-                            onClick={() => {
-                              setPasswordView((prev: any) => ({
-                                isPassword: !prev.isPassword,
-                              }));
-                            }}
-                          >
-                            {getPasswordView.isPassword ? (
-                              <OnEye />
-                            ) : (
-                              <OffEye />
-                            )}
-                          </IconButton>
-                        }
-                      />
-                    </Grid>
+                    {!currentStateData && (
+                      <Grid xs={12} sm={6} md={6}>
+                        <CommonInput
+                          name="password"
+                          label="Password"
+                          type={
+                            getPasswordView.isPassword ? "text" : "password"
+                          }
+                          formik={formik}
+                          placeholder="Password"
+                          endDecorator={
+                            <IconButton
+                              variant="soft"
+                              sx={{ borderRadius: "50vw" }}
+                              onClick={() => {
+                                setPasswordView((prev: any) => ({
+                                  isPassword: !prev.isPassword,
+                                }));
+                              }}
+                            >
+                              {getPasswordView.isPassword ? (
+                                <OnEye />
+                              ) : (
+                                <OffEye />
+                              )}
+                            </IconButton>
+                          }
+                        />
+                      </Grid>
+                    )}
                     <Grid xs={12} sm={6} md={6}>
                       <CommonSelect
                         name="userRole"
@@ -327,10 +333,13 @@ const OperationsActionsModal: React.FC<Props> = ({
                       <Button
                         sx={{ width: "100%", borderRadius: "50vw" }}
                         name="Cancel"
-                        color="neutral"
+                        color="primary"
                         type="submit"
                         variant="outlined"
-                        onClick={() => setModalOpen(false)}
+                        onClick={() => {
+                          setModalOpen(false);
+                          setCurrentUserData(null);
+                        }}
                       >
                         Cancel
                       </Button>

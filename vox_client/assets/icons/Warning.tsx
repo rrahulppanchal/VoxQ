@@ -1,10 +1,10 @@
-export default function Warning() {
+export default function Warning({ isNormal }: { isNormal?: boolean }) {
   return (
     <>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height="34"
-        width="34"
+        height={isNormal ? "18" : "34"}
+        width={isNormal ? "18" : "34"}
         viewBox="0 0 24 24"
         fill="currentColor"
       >

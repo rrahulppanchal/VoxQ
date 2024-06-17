@@ -168,7 +168,7 @@ export default function Sidebar() {
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
-          <ListItem sx={{ padding: " 0.75rem 0 0.75rem 0" }}>
+          <ListItem sx={{ padding: " 0.25rem 0 0.25rem 0" }}>
             <AccordionGroup
               variant="outlined"
               transition="0.2s"
@@ -185,7 +185,7 @@ export default function Sidebar() {
                   boxShadow: (theme) =>
                     `inset 0 1px ${theme.vars.palette.divider}`,
                   [`&.${accordionDetailsClasses.expanded}`]: {
-                    padding: " 0.75rem 0 0.75rem 0",
+                    padding: " 0.5rem 0 0.5rem 0",
                   },
                 },
               }}
@@ -245,6 +245,9 @@ export default function Sidebar() {
             data?.item.length ? (
               <ListItem key={index} nested>
                 <Toggler
+                  defaultExpanded={
+                    pathname.indexOf(data.redirect) !== -1 ? true : false
+                  }
                   renderToggle={({ open, setOpen }) => (
                     <ListItemButton
                       selected={pathname === data.redirect ? true : false}
@@ -263,9 +266,6 @@ export default function Sidebar() {
                         </Typography>
                         {open ? <UpArrow /> : <DownArrow />}
                       </ListItemContent>
-                      {/* <KeyboardArrowDownIcon
-                    sx={{ transform: open ? "rotate(180deg)" : "none" }}
-                  /> */}
                     </ListItemButton>
                   )}
                 >
