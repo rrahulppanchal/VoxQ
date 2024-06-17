@@ -166,6 +166,10 @@ a {
   backdrop-filter: blur(0);
 }
 
+.MuiModal-backdrop {
+  backdrop-filter: blur(0);
+}
+
 .pointer {
   cursor: pointer;
 }

@@ -24,6 +24,7 @@ import More from "@/assets/icons/More";
 import Edit from "@/assets/icons/Edit";
 import Delete from "@/assets/icons/Delete";
 import Users from "@/assets/icons/Users";
+import Password from "@/assets/icons/Password";
 
 function createData(
   userName: string,
@@ -59,8 +60,8 @@ const rows = [
     "johndoe@email.com",
     "Admin",
     "+91 9999999999",
-    "15/12/2022",
-    "15/12/2024",
+    "2022-02-03",
+    "2024-02-03",
     true,
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo unde aspernatur illo labore consequatur magni est, expedita, exercitationem laudantium iure alias, porro facilis doloremque. Explicabo facilis id molestiae ipsum est?"
   ),
@@ -71,8 +72,8 @@ const rows = [
     "johndoe@email.com",
     "Admin",
     "+91 9999999999",
-    "15/12/2022",
-    "15/12/2024",
+    "2022-06-02",
+    "2024-06-02",
     false,
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo unde aspernatur illo labore consequatur magni est, expedita, exercitationem laudantium iure alias, porro facilis doloremque. Explicabo facilis id molestiae ipsum est?"
   ),
@@ -92,10 +93,16 @@ interface IUser {
 }
 
 interface Props {
-  editAction?: any;
+  editAction: any;
+  deleteAction: any;
+  changePasswordAction: any;
 }
 
-const UsersTable: React.FC<Props> = ({ editAction }) => {
+const UsersTable: React.FC<Props> = ({
+  editAction,
+  deleteAction,
+  changePasswordAction,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [getCurentUser, setCurentUser] = React.useState<IUser>();
 
@@ -184,14 +191,28 @@ const UsersTable: React.FC<Props> = ({ editAction }) => {
                       <MenuItem onClick={() => editAction(row)}>
                         <ListItemDecorator>
                           <Edit />
-                        </ListItemDecorator>{" "}
+                        </ListItemDecorator>
                         Edit
                       </MenuItem>
-                      <ListDivider />
-                      <MenuItem variant="soft" color="danger">
+                      {/* <ListDivider /> */}
+                      <MenuItem
+                        variant="plain"
+                        color="warning"
+                        onClick={() => changePasswordAction(row)}
+                      >
+                        <ListItemDecorator sx={{ color: "inherit" }}>
+                          <Password />
+                        </ListItemDecorator>
+                        Change password
+                      </MenuItem>
+                      <MenuItem
+                        variant="plain"
+                        color="danger"
+                        onClick={() => deleteAction(row)}
+                      >
                         <ListItemDecorator sx={{ color: "inherit" }}>
                           <Delete />
-                        </ListItemDecorator>{" "}
+                        </ListItemDecorator>
                         Delete
                       </MenuItem>
                     </Menu>
