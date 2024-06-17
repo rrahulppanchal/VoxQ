@@ -93,9 +93,9 @@ interface IUser {
 }
 
 interface Props {
-  editAction?: (row: IUser) => void;
-  deleteAction?: (row: IUser) => void;
-  changePasswordAction?: (row: Iuser) => void;
+  editAction: any;
+  deleteAction: any;
+  changePasswordAction: any;
 }
 
 const UsersTable: React.FC<Props> = ({
