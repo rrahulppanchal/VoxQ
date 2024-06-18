@@ -334,7 +334,7 @@ const OperationsActionsModal: React.FC<Props> = ({
                         sx={{ width: "100%", borderRadius: "50vw" }}
                         name="Cancel"
                         color="primary"
-                        type="submit"
+                        type="button"
                         variant="outlined"
                         onClick={() => {
                           setModalOpen(false);

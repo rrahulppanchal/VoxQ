@@ -8,7 +8,7 @@ export default function UpProgress() {
   React.useEffect(() => {
     const timer = setInterval(() => {
       setProgress((prevProgress) =>
-        prevProgress >= 100 ? 0 : prevProgress + 10
+        prevProgress >= 100 ? 0 : prevProgress + 5
       );
     }, 800);
 
@@ -18,13 +18,13 @@ export default function UpProgress() {
   }, []);
 
   return (
-    <Stack spacing={1} sx={{ flex: 1, position: "absolute", top: 0 }}>
+    <div className="loader_bar">
       <LinearProgress
         variant="plain"
-        sx={{ height: "5px", position: "sticky", zIndex: 99999, top: 0 }}
+        sx={{ height: "2px" }}
         determinate
         value={progress}
       />
-    </Stack>
+    </div>
   );
 }
