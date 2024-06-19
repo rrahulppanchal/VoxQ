@@ -3,7 +3,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import FormHelperText from "@mui/joy/FormHelperText";
 import { Input } from "@mui/joy";
-import { FormikProps } from "formik";
+import { ErrorMessage, FormikProps } from "formik";
 
 interface CommonInputProps {
   name: string;
@@ -58,7 +58,9 @@ const CommonInput: React.FC<CommonInputProps> = ({
         {...fieldProps}
         {...props}
       />
-      <FormHelperText>{errorMessage}</FormHelperText>
+      <FormHelperText>
+        <ErrorMessage name={name} />
+      </FormHelperText>
     </FormControl>
   );
 };

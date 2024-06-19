@@ -22,9 +22,9 @@ interface Props {
 }
 
 type FormValues = {
-  email: string;
-  passWord: string;
-  confirmPassWord: string;
+  email?: string;
+  password: string;
+  isConfirmPassword: string;
 };
 
 const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
@@ -34,12 +34,16 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
   });
   const initialValues: FormValues = {
     email: "",
-    passWord: "",
-    confirmPassWord: "",
+    password: "",
+    isConfirmPassword: "",
   };
   const userSchema = Yup.object().shape({
-    password: Yup.string().required("Enter password"),
-    email: Yup.string().email("Invalid email").required("Enter email"),
+    password: Yup.string()
+      .min(5, "Password is required")
+      .required("Password is required"),
+    isConfirmPassword: Yup.string()
+      .required("Confirm Password is required")
+      .oneOf([Yup.ref("password"), ""], "Passwords must match"),
   });
   return (
     <>
@@ -67,7 +71,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
               onSubmit={(values) => console.log(values)}
             >
               {(formik) => (
-                <Form>
+                <Form onSubmit={formik.handleSubmit}>
                   <Grid container spacing={1} maxWidth="500px">
                     <Grid xs={12} sm={12} md={12}>
                       <CommonInput
@@ -98,8 +102,8 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
                     </Grid>
                     <Grid xs={12} sm={12} md={12}>
                       <CommonInput
-                        name="password"
-                        label="Password"
+                        name="isConfirmPassword"
+                        label="Confirm Password"
                         type={
                           getPasswordView.isConfirmPassword
                             ? "text"
@@ -149,6 +153,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
                         color="warning"
                         type="submit"
                         variant="solid"
+                        // onClick={() => formik.handleSubmit()}
                       >
                         Change Password
                       </Button>

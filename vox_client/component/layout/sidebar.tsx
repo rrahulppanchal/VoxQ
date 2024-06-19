@@ -291,7 +291,7 @@ export default function Sidebar() {
               </ListItem>
             ) : (
               <>
-                <ListItem>
+                <ListItem key={index}>
                   <ListItemButton
                     selected={pathname === data.redirect ? true : false}
                   >
