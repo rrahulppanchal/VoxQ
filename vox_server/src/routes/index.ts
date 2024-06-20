@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import productRouter from "./users_routes";
+import userRouter from "./users_routes";
 import authRouter from "./auth_routes";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
@@ -16,9 +16,9 @@ class MainRouter {
   }
 
   private initializeRoutes() {
-    this.router.use(productRouter);
-    // this.router.use(new AuthValidator().authValidator, authRouter);
     this.router.use(authRouter);
+    this.router.use(new AuthValidator().authValidator, userRouter);
+    // this.router.use(new AuthValidator().authValidator, authRouter);
     this.router.use("**", this.handleNotFound.bind(this));
   }
 

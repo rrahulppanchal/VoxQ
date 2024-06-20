@@ -5,7 +5,7 @@ export interface IUserData {
   password: string;
   first_name: string;
   last_name?: string | null;
-  user_role: number;
+  user_role: string;
   refresh_token?: string | null;
   created_at?: Date;
   updated_at?: Date;

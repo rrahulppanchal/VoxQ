@@ -10,31 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
-}
-
 model tbl_users {
-  user_id    Int     @id @default(autoincrement())
+  id    Int     @id @default(autoincrement())
   user_name  String
   user_email String  @unique
   password String
   first_name String
   last_name String?
-  user_role Int
-  refresh_token String?
+  description String?
+  phone String?
+  j_date DateTime
+  l_date DateTime?
+  user_role Role @default(USER)
+  is_deleted Boolean @default(false)
+  is_active Boolean @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
 
-model tbl_user_role {
-  id    Int     @id @default(autoincrement())
-  name  String
-}
-
-model tbl_user_tokens {
-  id             Int     @id
-  refresh_token  String
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
 }
