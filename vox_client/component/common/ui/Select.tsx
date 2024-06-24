@@ -58,6 +58,11 @@ const CommonSelect: React.FC<CommonSelectProps> = ({
       <Autocomplete
         {...props}
         // {...fieldProps}
+        value={options.find(
+          (item) =>
+            item.value === formik?.values[name] ||
+            item.label === formik?.values[name]
+        )}
         options={options}
         placeholder={placeholder}
         getOptionLabel={(option) => option.label}

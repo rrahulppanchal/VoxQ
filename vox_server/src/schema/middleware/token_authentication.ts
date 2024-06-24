@@ -13,26 +13,34 @@ class AuthValidator {
 
   public async authValidator(req: Request, res: Response, next: NextFunction) {
     try {
-      const cookieToken = req.headers.cookie;
-      if (!cookieToken) {
-        const response = new ResponseHandler(null, "No token provided", 401);
-        res.status(response.getStatusCode()).json(response.getResponse());
-        return;
+      // const cookieToken = req.headers.cookie;
+      // if (!cookieToken) {
+      //   const response = new ResponseHandler(null, "No token provided", 401);
+      //   res.status(response.getStatusCode()).json(response.getResponse());
+      //   return;
+      // }
+
+      // const token = cookieToken.split("=")[1];
+      // if (!token) {
+      //   const response = new ResponseHandler(null, "Invalid token format", 401);
+      //   res.status(response.getStatusCode()).json(response.getResponse());
+      //   return;
+      // }
+
+      const authHeader = req.headers["authorization"];
+      if (!authHeader) {
+        return res.status(403).json({ error: "User unauthorized" });
       }
 
-      const token = cookieToken.split("=")[1];
-      if (!token) {
-        const response = new ResponseHandler(null, "Invalid token format", 401);
-        res.status(response.getStatusCode()).json(response.getResponse());
-        return;
-      }
+      // Assuming the format is "Bearer <token>"
+      let token = authHeader.split(" ")[1];
 
       const decoded = jwt.verify(
         token,
         process.env.REFRESH_TOKEN_SECRET as string
       ) as { id: number };
       const user = await prisma.tbl_users.findUnique({
-        where: { user_id: decoded.id },
+        where: { id: decoded.id },
       });
 
       if (!user) {

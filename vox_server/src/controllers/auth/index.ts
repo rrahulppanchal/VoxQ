@@ -4,6 +4,7 @@ import { ILoginInData, IUserData } from "../../types.ts";
 import ResponseHandler from "../../utils/shared";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UserRole } from "../../utils/enum";
 
 class UserService {
   public prisma: PrismaClient;
@@ -27,16 +28,15 @@ class UserService {
       }
       const hashedPassword = await bcrypt.hash(reqData.password, 10);
 
-      const user = await this.prisma.tbl_users.create({
-        data: {
-          user_name: reqData.user_name,
-          user_email: reqData.user_email,
-          password: hashedPassword,
-          first_name: reqData.first_name,
-          last_name: reqData.last_name,
-          user_role: reqData.user_role,
-        },
-      });
+      // const user = await this.prisma.tbl_users.create({
+      //   data: {
+      //     user_name: reqData.user_name,
+      //     user_email: reqData.user_email,
+      //     password: hashedPassword,
+      //     first_name: reqData.first_name,
+      //     last_name: reqData.last_name,
+      //   },
+      // });
 
       // const refreshToken = UserService.generateRefreshToken({
       //   id: user.user_id,
@@ -49,12 +49,12 @@ class UserService {
       //   },
       // });
 
-      const response = new ResponseHandler(
-        user,
-        "User created successfully",
-        201
-      );
-      res.status(response.getStatusCode()).json(response.getResponse());
+      // const response = new ResponseHandler(
+      //   user,
+      //   "User created successfully",
+      //   201
+      // );
+      // res.status(response.getStatusCode()).json(response.getResponse());
     } catch (error) {
       const response = new ResponseHandler(null, "Failed to create user", 400);
       res.status(response.getStatusCode()).json(response.getResponse());
@@ -65,7 +65,7 @@ class UserService {
     try {
       const loginData = req.body as ILoginInData;
       const user = await this.prisma.tbl_users.findUnique({
-        where: { user_email: loginData.email },
+        where: { user_email: loginData.email, is_deleted: false },
       });
       if (!user) {
         const response = new ResponseHandler(null, "Invalid email", 400);
@@ -83,21 +83,21 @@ class UserService {
       }
 
       const accessToken = UserService.generateRefreshToken({
-        id: user.user_id,
+        id: user.id,
       });
 
       const userResponse = {
         accessToken: accessToken,
-        id: user.user_id,
+        id: user.id,
         userName: user.user_name,
         email: user.user_email,
         firstName: user.first_name,
         lastName: user.last_name,
-        userRole: user.user_role,
+        userRole: UserRole[user.user_role],
         created: user.created_at,
         updated: user.updated_at,
       };
-      const cookieResponse = { accessToken: accessToken, id: user.user_id };
+      const cookieResponse = { accessToken: accessToken, id: user.id };
       res.cookie("token", accessToken, {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
