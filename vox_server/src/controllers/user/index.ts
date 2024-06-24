@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import ResponseHandler from "../../utils/shared";
 import bcrypt from "bcrypt";
 import { IUser } from "../../types.ts";
+import { UserRole } from "../../utils/enum";
 
 class User {
   public prisma: PrismaClient;
@@ -36,8 +37,14 @@ class User {
           last_name: reqData.last_name,
           phone: reqData.phone,
           j_date: new Date(reqData.j_date),
-          user_role: Role.ADMIN,
+          user_role:
+            reqData.user_role === UserRole.ADMIN
+              ? Role.ADMIN
+              : reqData.user_role === UserRole.MODERATOR
+              ? Role.MODERATOR
+              : Role.USER,
           description: reqData.description,
+          is_active: reqData.is_active,
         },
       });
 
@@ -58,6 +65,13 @@ class User {
       const user = await this.prisma.tbl_users.findMany({
         where: { is_deleted: false },
       });
+
+      user.map(function (item) {
+        delete (item as unknown as IUser).password;
+        (item as unknown as IUser).user_role = UserRole[item.user_role];
+        return item;
+      });
+
       const response = new ResponseHandler(user, "Success", 200);
       res.status(response.getStatusCode()).json(response.getResponse());
     } catch (error) {
@@ -75,6 +89,7 @@ class User {
 
       if (user) {
         delete (user as unknown as IUser).password;
+        (user as unknown as IUser).user_role = UserRole[user.user_role];
       }
 
       const response = new ResponseHandler(
@@ -104,8 +119,13 @@ class User {
           last_name: reqData.last_name,
           phone: reqData.phone,
           j_date: new Date(reqData.j_date),
-          l_date: new Date(reqData.l_date),
-          user_role: reqData.user_role,
+          l_date: reqData.l_date ? new Date(reqData.l_date) : null,
+          user_role:
+            reqData.user_role === UserRole.ADMIN
+              ? Role.ADMIN
+              : reqData.user_role === UserRole.MODERATOR
+              ? Role.MODERATOR
+              : Role.USER,
           description: reqData.description,
           is_active: reqData.is_active,
           updated_at: new Date(),

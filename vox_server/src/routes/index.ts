@@ -16,7 +16,7 @@ class MainRouter {
   }
 
   private initializeRoutes() {
-    this.router.use(authRouter);
+    this.router.use("/auth", authRouter);
     this.router.use(new AuthValidator().authValidator, userRouter);
     // this.router.use(new AuthValidator().authValidator, authRouter);
     this.router.use("**", this.handleNotFound.bind(this));

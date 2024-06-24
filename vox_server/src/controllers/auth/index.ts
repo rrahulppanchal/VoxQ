@@ -65,7 +65,7 @@ class UserService {
     try {
       const loginData = req.body as ILoginInData;
       const user = await this.prisma.tbl_users.findUnique({
-        where: { user_email: loginData.email },
+        where: { user_email: loginData.email, is_deleted: false },
       });
       if (!user) {
         const response = new ResponseHandler(null, "Invalid email", 400);
