@@ -59,7 +59,8 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
           <ModalDialog
             aria-labelledby="modal-dialog-overflow"
             layout="center"
-            color="warning"
+            color="neutral"
+            variant="outlined"
           >
             <Typography id="modal-dialog-overflow" level="h2">
               Change Password
@@ -137,7 +138,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
                       <Button
                         sx={{ width: "100%", borderRadius: "50vw" }}
                         name="Cancel"
-                        color="warning"
+                        color="neutral"
                         type="button"
                         variant="outlined"
                         onClick={() => {

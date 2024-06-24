@@ -22,7 +22,10 @@ import { useState } from "react";
 
 import { useFormik, FormikErrors } from "formik";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
+
 import { post } from "@/helper/web.requests";
+import { redirect } from "next/navigation";
 interface FormValues {
   email: string;
   password: string;
@@ -40,6 +43,28 @@ export default function Login() {
     isPassword: false,
   });
 
+  const handleLogin = async (values: FormValues) => {
+    const id = toast.loading("User logging in...");
+    try {
+      const data = await post("/auth/login", values);
+      console.log(data);
+      localStorage.setItem("loginData", JSON.stringify(data.data));
+      toast.update(id, {
+        render: "User logged in successfully.",
+        type: "success",
+        isLoading: false,
+      });
+      redirect("/");
+    } catch (error) {
+      console.log(error);
+      toast.update(id, {
+        render: "Something went wrong.",
+        type: "error",
+        isLoading: false,
+      });
+    }
+  };
+
   const formik = useFormik<FormValues>({
     initialValues: {
       email: "",
@@ -47,9 +72,7 @@ export default function Login() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
-      const data = await post("/login", values);
-      localStorage.setItem("loginData", JSON.stringify(data.data));
+      handleLogin(values);
     },
     validate: (values) => {
       const errors: FormikErrors<FormValues> = {};

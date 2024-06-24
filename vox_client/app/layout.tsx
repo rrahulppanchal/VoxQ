@@ -11,6 +11,8 @@ import {
 } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import LoaderContext from "@/store/loader-context";
+import { useCallback, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +26,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const setLoading = useCallback((state: boolean) => setIsLoading(state), []);
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -34,7 +40,9 @@ export default function RootLayout({
               theme={{ [MATERIAL_THEME_ID]: materialTheme }}
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                {children}
+                <LoaderContext.Provider value={{ isLoading, setLoading }}>
+                  {children}
+                </LoaderContext.Provider>
               </LocalizationProvider>
             </MaterialCssVarsProvider>
           </JoyCssVarsProvider>

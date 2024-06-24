@@ -16,14 +16,19 @@ import {
 } from "@mui/joy";
 import UsersTable from "./users-table";
 import OperationsActionsModal from "./operations-actions-modal";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DownArrow } from "@/assets/icons/Arrow";
 import ConfirmationModal from "../../../../component/common/ui/confirmation-modal";
 import ChangePassword from "./change-password";
+import { deleteRequest, get } from "@/helper/web.requests";
+import { toast } from "react-toastify";
+import { useLoader } from "@/store/loader-context";
 
 const options = ["Add New User", "Import Users"];
 
 export default function Users() {
+  const { setLoading } = useLoader();
+
   const actionRef = useRef<() => void | null>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -34,6 +39,8 @@ export default function Users() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isChangePassModalOpen, setIsChangePassModalOpen] =
     useState<boolean>(false);
+
+  const [getUsersDate, setUsersDate] = useState();
 
   const handleClick = () => {
     if (options[selectedIndex] === "Add New User") {
@@ -56,13 +63,54 @@ export default function Users() {
 
   const deleteAction = (data: any): void | undefined => {
     setIsDeleteModalOpen(true);
-    console.log(data);
+    setCurrentUserData(data);
   };
 
   const changePasswordAction = (data: any): void | undefined => {
     setIsChangePassModalOpen(true);
     console.log(data);
   };
+
+  const deleteUser = async (deletionId: number) => {
+    const id = toast.loading("Deleting user...");
+    try {
+      const res = await deleteRequest("/delete-user/" + deletionId);
+      if (res) {
+        toast.update(id, {
+          render: "User deleted successfully.",
+          type: "success",
+          isLoading: false,
+          autoClose: 4000,
+        });
+        getUsersData();
+        setIsDeleteModalOpen(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.update(id, {
+        render: "Something went wrong.",
+        type: "error",
+        isLoading: false,
+        autoClose: 4000,
+      });
+    }
+  };
+
+  const getUsersData = async () => {
+    setLoading(true);
+    try {
+      const res = await get("/get-users");
+      setUsersDate(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUsersData();
+  }, []);
 
   return (
     <>
@@ -149,6 +197,7 @@ export default function Users() {
           }}
         >
           <UsersTable
+            getUsersDate={getUsersDate}
             editAction={editAction}
             deleteAction={deleteAction}
             changePasswordAction={changePasswordAction}
@@ -156,6 +205,7 @@ export default function Users() {
         </Box>
       </Box>
       <OperationsActionsModal
+        getUsersList={getUsersData}
         currentStateData={getCurrentUserData}
         isModalOpen={isOperationModalOpen}
         setModalOpen={setOperationModal}
@@ -164,6 +214,9 @@ export default function Users() {
       <ConfirmationModal
         open={isDeleteModalOpen}
         setOpen={setIsDeleteModalOpen}
+        OnYesClick={() => {
+          deleteUser(getCurrentUserData.id);
+        }}
       />
       <ChangePassword
         open={isChangePassModalOpen}

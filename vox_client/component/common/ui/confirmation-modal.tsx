@@ -17,18 +17,20 @@ interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   message?: string;
   header?: string;
+  OnYesClick: React.MouseEventHandler<HTMLAnchorElement> | undefined;
 }
 
 const ConfirmationModal: React.FC<Props> = ({
   open,
   setOpen,
+  OnYesClick,
   header = "Confirmation",
   message = "Are you sure you want to delete this item? After deletion <br />you cannot access this resource!",
 }) => {
   return (
     <>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog variant="outlined" role="alertdialog" color="danger">
+        <ModalDialog variant="outlined" role="alertdialog" color="neutral">
           <DialogTitle>
             {/* <Warning isNormal={true} /> */}
             {header}
@@ -43,7 +45,7 @@ const ConfirmationModal: React.FC<Props> = ({
                 <Button
                   sx={{ width: "100%", borderRadius: "50vw", marginRight: 1 }}
                   name="Cancel"
-                  color="danger"
+                  color="neutral"
                   type="submit"
                   variant="outlined"
                   onClick={() => {
@@ -59,6 +61,7 @@ const ConfirmationModal: React.FC<Props> = ({
                   color="danger"
                   type="submit"
                   variant="solid"
+                  onClick={OnYesClick}
                 >
                   Delete
                 </Button>

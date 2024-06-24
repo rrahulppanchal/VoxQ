@@ -13,21 +13,25 @@ import Typography from "@mui/joy/Typography";
 import CommonCheckBox from "@/component/common/ui/Checkbox";
 import CommonSelect from "@/component/common/ui/Select";
 import CommonInput from "@/component/common/ui/Input";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikValues } from "formik";
 import { Divider, FormHelperText, Grid, IconButton, Textarea } from "@mui/joy";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import OnEye from "@/assets/icons/OnEye";
 import OffEye from "@/assets/icons/OffEye";
 import dayjs from "dayjs";
+import { post, put } from "@/helper/web.requests";
+import { toast } from "react-toastify";
+import { userRoleOptions } from "@/assets/data";
 
 interface FormValues {
+  id?: number;
   email: string;
   firstName: string;
   lastName: string;
   userName: string;
   password: string;
   phone: string;
-  userRole: number | null;
+  userRole: string | null;
   jDate: Date | string;
   lDate: Date | string;
   isActive: boolean;
@@ -39,17 +43,18 @@ interface Props {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentUserData: React.Dispatch<React.SetStateAction<any>>;
   currentStateData: any;
+  getUsersList: any;
 }
 
 const userSchema = Yup.object().shape({
   firstName: Yup.string().required("Enter first name"),
   lastName: Yup.string().required("Enter last name"),
   userName: Yup.string().required("Enter username"),
-  password: Yup.string().required("Enter password"),
+  // password: Yup.string().required("Enter password"),
   phone: Yup.string().required("Enter phone"),
-  userRole: Yup.number().required("Select user role"),
+  userRole: Yup.string().required("Select user role"),
   jDate: Yup.string().required("Select joining date"),
-  lDate: Yup.string().required("Select leaving date"),
+  // lDate: currentStateData ? Yup.string().required("Select leaving date") : null,
   email: Yup.string().email("Invalid email").required("Enter email"),
 });
 
@@ -58,6 +63,7 @@ const OperationsActionsModal: React.FC<Props> = ({
   setModalOpen,
   currentStateData,
   setCurrentUserData,
+  getUsersList,
 }) => {
   const [getPasswordView, setPasswordView] = React.useState({
     isPassword: false,
@@ -66,21 +72,99 @@ const OperationsActionsModal: React.FC<Props> = ({
   console.log(currentStateData);
 
   const initialValues: FormValues = {
-    email: currentStateData ? currentStateData?.email : "",
-    firstName: currentStateData ? currentStateData?.firstName : "",
-    lastName: currentStateData ? currentStateData?.lastName : "",
-    userName: currentStateData ? currentStateData?.userName : "",
+    id: currentStateData ? currentStateData?.id : null,
+    email: currentStateData ? currentStateData?.user_email : "",
+    firstName: currentStateData ? currentStateData?.first_name : "",
+    lastName: currentStateData ? currentStateData?.last_name : "",
+    userName: currentStateData ? currentStateData?.user_name : "",
     password: "",
     phone: currentStateData ? currentStateData?.phone : "",
-    userRole: null,
+    userRole: currentStateData ? currentStateData?.user_role : null,
     jDate: currentStateData
-      ? dayjs(currentStateData?.jDate).format("YYYY-MM-DD")
+      ? dayjs(currentStateData?.j_date).format("YYYY-MM-DD")
       : "",
     lDate: currentStateData
-      ? dayjs(currentStateData?.lDate).format("YYYY-MM-DD")
+      ? currentStateData?.l_date
+        ? dayjs(currentStateData?.l_date).format("YYYY-MM-DD")
+        : ""
       : "",
-    isActive: currentStateData ? currentStateData?.isActive : false,
-    userDescription: currentStateData ? currentStateData?.userDescription : "",
+    isActive: currentStateData ? currentStateData?.is_active : true,
+    userDescription: currentStateData ? currentStateData?.description : "",
+  };
+
+  const createUser = async (payload: any) => {
+    const id = toast.loading("Creating user...");
+    try {
+      const res = await post("/create-user", payload);
+      if (res) {
+        toast.update(id, {
+          render: "User created in successfully.",
+          type: "success",
+          isLoading: false,
+          autoClose: 4000,
+        });
+        getUsersList();
+        setModalOpen(false);
+        setCurrentUserData(null);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.update(id, {
+        render: "Something went wrong.",
+        type: "error",
+        isLoading: false,
+        autoClose: 4000,
+      });
+    }
+  };
+
+  const updateUser = async (payload: any) => {
+    const id = toast.loading("Updating user...");
+    try {
+      const res = await put("/update-user", payload);
+      if (res) {
+        toast.update(id, {
+          render: "User updated successfully.",
+          type: "success",
+          isLoading: false,
+          autoClose: 4000,
+        });
+        getUsersList();
+        setModalOpen(false);
+        setCurrentUserData(null);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.update(id, {
+        render: "Something went wrong.",
+        type: "error",
+        isLoading: false,
+        autoClose: 4000,
+      });
+    }
+  };
+
+  const handleFormSubmit = async (values: FormikValues) => {
+    const payload = {
+      ...values,
+      user_name: values.userName,
+      user_email: values.email,
+      first_name: values.firstName,
+      last_name: values.lastName,
+      password: values.password,
+      description: values.userDescription,
+      phone: values.phone,
+      j_date: values.jDate,
+      l_date: values.lDate ? values.lDate : null,
+      user_role: values.userRole,
+      is_active: values.isActive,
+    };
+
+    if (currentStateData) {
+      updateUser(payload);
+    } else {
+      createUser(payload);
+    }
   };
 
   return (
@@ -103,7 +187,7 @@ const OperationsActionsModal: React.FC<Props> = ({
               enableReinitialize
               initialValues={initialValues}
               validationSchema={userSchema}
-              onSubmit={(values) => console.log(values)}
+              onSubmit={(values) => handleFormSubmit(values)}
             >
               {(formik) => (
                 <Form>
@@ -177,13 +261,12 @@ const OperationsActionsModal: React.FC<Props> = ({
                     <Grid xs={12} sm={6} md={6}>
                       <CommonSelect
                         name="userRole"
-                        options={[
-                          { label: "Admin", value: 1 },
-                          { label: "Moderator", value: 2 },
-                          { label: "User", value: 3 },
-                        ]}
+                        options={userRoleOptions}
                         label="User Role"
                         formik={formik}
+                        onChange={(e, value) => {
+                          formik.setFieldValue("userRole", value?.label);
+                        }}
                         placeholder="User Role"
                       />
                     </Grid>
@@ -200,7 +283,11 @@ const OperationsActionsModal: React.FC<Props> = ({
                         <FormLabel>Joining Date</FormLabel>
                         <DatePicker
                           name="jDate"
-                          value={dayjs(formik.values.jDate)}
+                          value={
+                            formik.values.jDate
+                              ? dayjs(formik.values.jDate)
+                              : null
+                          }
                           slotProps={{
                             textField: {
                               size: "small",
@@ -222,39 +309,45 @@ const OperationsActionsModal: React.FC<Props> = ({
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid xs={12} sm={6} md={6} marginBottom="5px">
-                      <FormControl
-                        error={
-                          formik?.touched.lDate && formik?.errors.lDate
-                            ? true
-                            : false
-                        }
-                      >
-                        <FormLabel>Leaving Date</FormLabel>
-                        <DatePicker
-                          name="lDate"
-                          value={dayjs(formik.values.lDate)}
-                          slotProps={{
-                            textField: {
-                              size: "small",
-                              placeholder: "Select date",
-                              error:
-                                formik?.touched.lDate && formik?.errors.lDate
-                                  ? true
-                                  : false,
-                            },
-                          }}
-                          onChange={(newValue: dayjs.Dayjs | null) => {
-                            formik.setFieldValue("lDate", newValue);
-                          }}
-                        />
-                        {formik?.touched.lDate && formik?.errors.lDate && (
-                          <FormHelperText>
-                            {formik?.errors.lDate as string}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
+                    {currentStateData && (
+                      <Grid xs={12} sm={6} md={6} marginBottom="5px">
+                        <FormControl
+                          error={
+                            formik?.touched.lDate && formik?.errors.lDate
+                              ? true
+                              : false
+                          }
+                        >
+                          <FormLabel>Leaving Date</FormLabel>
+                          <DatePicker
+                            name="lDate"
+                            value={
+                              formik.values.lDate
+                                ? dayjs(formik.values.lDate)
+                                : null
+                            }
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                                placeholder: "Select date",
+                                error:
+                                  formik?.touched.lDate && formik?.errors.lDate
+                                    ? true
+                                    : false,
+                              },
+                            }}
+                            onChange={(newValue: dayjs.Dayjs | null) => {
+                              formik.setFieldValue("lDate", newValue);
+                            }}
+                          />
+                          {formik?.touched.lDate && formik?.errors.lDate && (
+                            <FormHelperText>
+                              {formik?.errors.lDate as string}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
+                      </Grid>
+                    )}
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid xs={12} sm={6} md={6}>
@@ -333,7 +426,7 @@ const OperationsActionsModal: React.FC<Props> = ({
                       <Button
                         sx={{ width: "100%", borderRadius: "50vw" }}
                         name="Cancel"
-                        color="primary"
+                        color="neutral"
                         type="button"
                         variant="outlined"
                         onClick={() => {
@@ -351,7 +444,7 @@ const OperationsActionsModal: React.FC<Props> = ({
                         type="submit"
                         variant="solid"
                       >
-                        Save Lead
+                        {currentStateData ? "Update user" : "Save user"}
                       </Button>
                     </Grid>
                   </Grid>

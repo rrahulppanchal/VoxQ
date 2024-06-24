@@ -4,7 +4,7 @@ import { ILoginInData, IUserData } from "../../types.ts";
 import ResponseHandler from "../../utils/shared";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Role } from "../../utils/enum";
+import { UserRole } from "../../utils/enum";
 
 class UserService {
   public prisma: PrismaClient;
@@ -93,7 +93,7 @@ class UserService {
         email: user.user_email,
         firstName: user.first_name,
         lastName: user.last_name,
-        userRole: Role[user.user_role],
+        userRole: UserRole[user.user_role],
         created: user.created_at,
         updated: user.updated_at,
       };
