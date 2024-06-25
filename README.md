@@ -93,6 +93,7 @@ This command starts the Next.js application in production mode on port 4000.
 Before you begin, ensure you have the following installed on your machine:
 - **Node.js** (v18.7 or later)
 - **npm** (v6.x or later) or **yarn** (v1.x or later)
+- Docker with postgres intance
 - Set up environment variable accordingly for client and server.
 
 This README provides a clear and structured guide for setting up and running both the server and client parts of the project.
