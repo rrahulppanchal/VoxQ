@@ -28,7 +28,7 @@ export const sidebar_data = [
       },
       {
         display_name: "Dashboard",
-        redirect: "/",
+        redirect: "/admin/dashboard",
         icon: Leads,
       },
     ],
