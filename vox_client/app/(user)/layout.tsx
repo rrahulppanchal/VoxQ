@@ -35,7 +35,9 @@ export default function RootLayout({
           <Stack direction="row" flexGrow={1}>
             <Sidebar />
             <Header />
-            <Grid sx={{ marginTop: "var(--Header-height)" }}>{children}</Grid>
+            <Grid sx={{ marginTop: "var(--Header-height)", width: "100%" }}>
+              {children}
+            </Grid>
           </Stack>
         </Grid>
       </body>
