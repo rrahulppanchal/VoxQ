@@ -4,6 +4,12 @@ import Add from "@/assets/icons/Add";
 import {
   Box,
   Button,
+  ButtonGroup,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -13,8 +19,29 @@ import {
 } from "@mui/joy";
 import Inactive from "./in-active";
 import Filter from "@/assets/icons/Filter";
+import { DownArrow } from "@/assets/icons/Arrow";
+
+const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
 export default function ContactManagement() {
+  const actionRef = React.useRef<() => void | null>(null);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  const handleClick = () => {
+    if (options[selectedIndex] === "Add New User") {
+    }
+  };
+
+  const handleMenuItemClick = (
+    event: React.MouseEvent<HTMLElement, MouseEvent>,
+    index: number
+  ) => {
+    setSelectedIndex(index);
+    setOpen(false);
+  };
+
   return (
     <>
       <Box sx={{ flex: 1 }}>
@@ -23,22 +50,65 @@ export default function ContactManagement() {
             Contact Management
           </Typography>
         </Box>
+        <Divider />
         <Box
           sx={{
             m: 2,
-            p: 2,
+            p: 0,
             borderRadius: "md",
             display: "flex",
             textAlign: "end",
             justifyContent: "end",
             alignItems: "flex-end",
-            background: "#fb923c1a",
-            border: "1px solid #fb923c5c",
             gap: 2,
           }}
         >
           <Button endDecorator={<Filter />}>Filter</Button>
-          <Button startDecorator={<Add />}>Add Contact</Button>
+          <Stack direction="row" spacing={1}>
+            <ButtonGroup
+              ref={anchorRef}
+              variant="solid"
+              color="primary"
+              aria-label="split button"
+            >
+              <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+              <IconButton
+                aria-controls={open ? "split-button-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-label="select merge strategy"
+                aria-haspopup="menu"
+                onMouseDown={() => {
+                  // @ts-ignore
+                  actionRef.current = () => setOpen(!open);
+                }}
+                onKeyDown={() => {
+                  // @ts-ignore
+                  actionRef.current = () => setOpen(!open);
+                }}
+                onClick={() => {
+                  actionRef.current?.();
+                }}
+              >
+                <DownArrow />
+              </IconButton>
+            </ButtonGroup>
+            <Menu
+              open={open}
+              onClose={() => setOpen(false)}
+              anchorEl={anchorRef.current}
+            >
+              {options.map((option, index) => (
+                <MenuItem
+                  key={option}
+                  disabled={index === 2}
+                  selected={index === selectedIndex}
+                  onClick={(event) => handleMenuItemClick(event, index)}
+                >
+                  {option}
+                </MenuItem>
+              ))}
+            </Menu>
+          </Stack>
         </Box>
         <Box marginTop={2}>
           <Tabs

@@ -120,18 +120,17 @@ export default function Users() {
             Admin - Users
           </Typography>
         </Box>
+        <Divider />
         <Box
           sx={{
             m: 2,
-            p: 2,
+            p: 0,
             borderRadius: "md",
             display: "flex",
             textAlign: "end",
             flexWrap: "wrap",
             justifyContent: "end",
             alignItems: "flex-end",
-            background: "#fb923c1a",
-            border: "1px solid #fb923c5c",
             gap: 2,
           }}
         >
@@ -190,7 +189,7 @@ export default function Users() {
             </Menu>
           </Stack>
         </Box>
-        <Divider />
+        {/* <Divider /> */}
         <Box
           sx={{
             m: 2,
