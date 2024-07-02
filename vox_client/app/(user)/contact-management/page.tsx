@@ -9,6 +9,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Snackbar,
   Stack,
   Tab,
   TabList,
@@ -20,6 +21,9 @@ import {
 import Inactive from "./in-active";
 import Filter from "@/assets/icons/Filter";
 import { DownArrow } from "@/assets/icons/Arrow";
+import Close from "@/assets/icons/Close";
+import ContactTable from "./contact-table";
+import ContactActionModal from "./contact-action-modal";
 
 const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
@@ -28,9 +32,12 @@ export default function ContactManagement() {
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [openFilter, setOpenFilter] = React.useState(false);
+  const [isModalOpen, setModalOpen] = React.useState(false);
 
   const handleClick = () => {
-    if (options[selectedIndex] === "Add New User") {
+    if (options[selectedIndex] === "Add Contact") {
+      setModalOpen(true);
     }
   };
 
@@ -63,7 +70,13 @@ export default function ContactManagement() {
             gap: 2,
           }}
         >
-          <Button endDecorator={<Filter />}>Filter</Button>
+          <IconButton
+            color="neutral"
+            variant="outlined"
+            onClick={() => setOpenFilter(true)}
+          >
+            <Filter />
+          </IconButton>
           <Stack direction="row" spacing={1}>
             <ButtonGroup
               ref={anchorRef}
@@ -93,6 +106,10 @@ export default function ContactManagement() {
               </IconButton>
             </ButtonGroup>
             <Menu
+              invertedColors
+              color="neutral"
+              variant="plain"
+              placement="bottom-end"
               open={open}
               onClose={() => setOpen(false)}
               anchorEl={anchorRef.current}
@@ -110,7 +127,10 @@ export default function ContactManagement() {
             </Menu>
           </Stack>
         </Box>
-        <Box marginTop={2}>
+        <Box padding={2} paddingTop={0}>
+          <ContactTable />
+        </Box>
+        {/* <Box marginTop={2}>
           <Tabs
             defaultValue={0}
             sx={{
@@ -183,8 +203,68 @@ export default function ContactManagement() {
               <Inactive />
             </TabPanel>
           </Tabs>
-        </Box>
+        </Box> */}
       </Box>
+      <Snackbar
+        // autoHideDuration={50000}
+        variant="outlined"
+        color="neutral"
+        size="lg"
+        invertedColors
+        open={openFilter}
+        onClose={() => setOpenFilter(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={(theme) => ({
+          background: `linear-gradient(45deg, ${theme.palette.primary[600]} 30%, ${theme.palette.primary[500]} 90%})`,
+          maxWidth: 460,
+        })}
+      >
+        <div>
+          <Typography level="title-lg">Filter</Typography>
+          <Typography sx={{ mt: 1, mb: 2 }}>
+            Are you sure, you want to leave this page without confirming your
+            order?
+          </Typography>
+          <Typography sx={{ mt: 1, mb: 2 }}>
+            Are you sure, you want to leave this page without confirming your
+            order?
+          </Typography>
+          <Typography sx={{ mt: 1, mb: 2 }}>
+            Are you sure, you want to leave this page without confirming your
+            order?
+          </Typography>
+          <Typography sx={{ mt: 1, mb: 2 }}>
+            Are you sure, you want to leave this page without confirming your
+            order?
+          </Typography>
+          <Stack direction="row" spacing={1}>
+            <Button
+              sx={{ width: "100%", borderRadius: "50vw" }}
+              variant="outlined"
+              color="neutral"
+              onClick={() => setOpenFilter(false)}
+              startDecorator={<Close />}
+            >
+              Cancel
+            </Button>
+            <Button
+              sx={{ width: "100%", borderRadius: "50vw" }}
+              variant="solid"
+              color="neutral"
+              onClick={() => setOpenFilter(false)}
+              startDecorator={<Filter />}
+            >
+              Filter
+            </Button>
+          </Stack>
+        </div>
+      </Snackbar>
+      <ContactActionModal
+        isModalOpen={isModalOpen}
+        setModalOpen={function (value: React.SetStateAction<boolean>): void {
+          setModalOpen(!isModalOpen);
+        }}
+      />
     </>
   );
 }

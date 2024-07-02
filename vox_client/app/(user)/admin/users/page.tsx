@@ -172,6 +172,7 @@ export default function Users() {
               </IconButton>
             </ButtonGroup>
             <Menu
+              placement="bottom-end"
               open={open}
               onClose={() => setOpen(false)}
               anchorEl={anchorRef.current}
