@@ -24,6 +24,7 @@ import { DownArrow } from "@/assets/icons/Arrow";
 import Close from "@/assets/icons/Close";
 import ContactTable from "./contact-table";
 import ContactActionModal from "./contact-action-modal";
+import SingleContactActionModal from "./single-contact-action-modal";
 
 const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
@@ -34,10 +35,14 @@ export default function ContactManagement() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [openFilter, setOpenFilter] = React.useState(false);
   const [isModalOpen, setModalOpen] = React.useState(false);
+  const [isModalSingleOpen, setModalSingleOpen] = React.useState(false);
 
   const handleClick = () => {
-    if (options[selectedIndex] === "Add Contact") {
+    if (options[selectedIndex] === "Add multiple contacts") {
       setModalOpen(true);
+    }
+    if (options[selectedIndex] === "Add Contact") {
+      setModalSingleOpen(true);
     }
   };
 
@@ -263,6 +268,12 @@ export default function ContactManagement() {
         isModalOpen={isModalOpen}
         setModalOpen={function (value: React.SetStateAction<boolean>): void {
           setModalOpen(!isModalOpen);
+        }}
+      />
+      <SingleContactActionModal
+        isModalOpen={isModalSingleOpen}
+        setModalOpen={function (value: React.SetStateAction<boolean>): void {
+          setModalSingleOpen(!isModalSingleOpen);
         }}
       />
     </>
