@@ -19,6 +19,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { Pagination } from "@mui/material";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function createData(
@@ -93,6 +94,7 @@ interface IUser {
 }
 
 function ContactTable() {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const data: any = [{ email: "test@email.com" }];
 
@@ -209,6 +211,7 @@ function ContactTable() {
                             onClick={() => {
                               // setCurentUser(row as IUser);
                               // setOpen(true);
+                              router.push("/contact-management/contact/3");
                             }}
                           >
                             {row.email}
