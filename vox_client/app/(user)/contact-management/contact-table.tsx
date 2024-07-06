@@ -126,6 +126,7 @@ function ContactTable() {
                     <Tooltip
                       variant="outlined"
                       arrow
+                      placement="top-start"
                       enterDelay={1000}
                       title={
                         <Box
