@@ -13,6 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import LoaderContext from "@/store/loader-context";
 import { useCallback, useState } from "react";
+import { getInitColorSchemeScript } from "@mui/joy/";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,16 +28,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isLoading, setIsLoading] = useState(false);
-
   const setLoading = useCallback((state: boolean) => setIsLoading(state), []);
 
   return (
     <html lang="en">
       <body className={inter.className}>
+        {getInitColorSchemeScript()}
         <StyledEngineProvider injectFirst>
-          <JoyCssVarsProvider defaultMode="system" theme={theme}>
+          <JoyCssVarsProvider theme={theme}>
             <MaterialCssVarsProvider
-              defaultMode="system"
+              // defaultMode="system"
               theme={{ [MATERIAL_THEME_ID]: materialTheme }}
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
