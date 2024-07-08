@@ -9,6 +9,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Sheet,
   Snackbar,
   Stack,
   Tab,
@@ -56,86 +57,87 @@ export default function ContactManagement() {
 
   return (
     <>
-      <Box sx={{ flex: 1 }}>
-        <Box sx={{ px: { xs: 2, md: 2 } }}>
-          <Typography level="h2" component="h1" sx={{ pt: 1, mb: 2 }}>
-            Contact Management
-          </Typography>
-        </Box>
-        <Divider />
-        <Box
-          sx={{
-            m: 2,
-            p: 0,
-            borderRadius: "md",
-            display: "flex",
-            textAlign: "end",
-            justifyContent: "end",
-            alignItems: "flex-end",
-            gap: 2,
-          }}
-        >
-          <IconButton
-            color="neutral"
-            variant="outlined"
-            onClick={() => setOpenFilter(true)}
+      <Sheet>
+        <Box sx={{ flex: 1 }}>
+          <Box sx={{ px: { xs: 2, md: 2 } }}>
+            <Typography level="h2" component="h1" sx={{ pt: 1, mb: 2 }}>
+              Contact Management
+            </Typography>
+          </Box>
+          <Divider />
+          <Box
+            sx={{
+              m: 2,
+              p: 0,
+              borderRadius: "md",
+              display: "flex",
+              textAlign: "end",
+              justifyContent: "end",
+              alignItems: "flex-end",
+              gap: 2,
+            }}
           >
-            <Filter />
-          </IconButton>
-          <Stack direction="row" spacing={1}>
-            <ButtonGroup
-              ref={anchorRef}
-              variant="solid"
-              color="primary"
-              aria-label="split button"
-            >
-              <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-              <IconButton
-                aria-controls={open ? "split-button-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-label="select merge strategy"
-                aria-haspopup="menu"
-                onMouseDown={() => {
-                  // @ts-ignore
-                  actionRef.current = () => setOpen(!open);
-                }}
-                onKeyDown={() => {
-                  // @ts-ignore
-                  actionRef.current = () => setOpen(!open);
-                }}
-                onClick={() => {
-                  actionRef.current?.();
-                }}
-              >
-                <DownArrow />
-              </IconButton>
-            </ButtonGroup>
-            <Menu
-              invertedColors
+            <IconButton
               color="neutral"
-              variant="plain"
-              placement="bottom-end"
-              open={open}
-              onClose={() => setOpen(false)}
-              anchorEl={anchorRef.current}
+              variant="outlined"
+              onClick={() => setOpenFilter(true)}
             >
-              {options.map((option, index) => (
-                <MenuItem
-                  key={option}
-                  disabled={index === 2}
-                  selected={index === selectedIndex}
-                  onClick={(event) => handleMenuItemClick(event, index)}
+              <Filter />
+            </IconButton>
+            <Stack direction="row" spacing={1}>
+              <ButtonGroup
+                ref={anchorRef}
+                variant="solid"
+                color="primary"
+                aria-label="split button"
+              >
+                <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+                <IconButton
+                  aria-controls={open ? "split-button-menu" : undefined}
+                  aria-expanded={open ? "true" : undefined}
+                  aria-label="select merge strategy"
+                  aria-haspopup="menu"
+                  onMouseDown={() => {
+                    // @ts-ignore
+                    actionRef.current = () => setOpen(!open);
+                  }}
+                  onKeyDown={() => {
+                    // @ts-ignore
+                    actionRef.current = () => setOpen(!open);
+                  }}
+                  onClick={() => {
+                    actionRef.current?.();
+                  }}
                 >
-                  {option}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Stack>
-        </Box>
-        <Box padding={2} paddingTop={0}>
-          <ContactTable />
-        </Box>
-        {/* <Box marginTop={2}>
+                  <DownArrow />
+                </IconButton>
+              </ButtonGroup>
+              <Menu
+                invertedColors
+                color="neutral"
+                variant="plain"
+                placement="bottom-end"
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef.current}
+              >
+                {options.map((option, index) => (
+                  <MenuItem
+                    key={option}
+                    disabled={index === 2}
+                    selected={index === selectedIndex}
+                    onClick={(event) => handleMenuItemClick(event, index)}
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Stack>
+          </Box>
+          <Box padding={2} paddingTop={0}>
+            <ContactTable />
+          </Box>
+          {/* <Box marginTop={2}>
           <Tabs
             defaultValue={0}
             sx={{
@@ -209,73 +211,74 @@ export default function ContactManagement() {
             </TabPanel>
           </Tabs>
         </Box> */}
-      </Box>
-      <Snackbar
-        // autoHideDuration={50000}
-        variant="outlined"
-        color="neutral"
-        size="lg"
-        invertedColors
-        open={openFilter}
-        onClose={() => setOpenFilter(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        sx={(theme) => ({
-          background: `linear-gradient(45deg, ${theme.palette.primary[600]} 30%, ${theme.palette.primary[500]} 90%})`,
-          maxWidth: 460,
-        })}
-      >
-        <div>
-          <Typography level="title-lg">Filter</Typography>
-          <Typography sx={{ mt: 1, mb: 2 }}>
-            Are you sure, you want to leave this page without confirming your
-            order?
-          </Typography>
-          <Typography sx={{ mt: 1, mb: 2 }}>
-            Are you sure, you want to leave this page without confirming your
-            order?
-          </Typography>
-          <Typography sx={{ mt: 1, mb: 2 }}>
-            Are you sure, you want to leave this page without confirming your
-            order?
-          </Typography>
-          <Typography sx={{ mt: 1, mb: 2 }}>
-            Are you sure, you want to leave this page without confirming your
-            order?
-          </Typography>
-          <Stack direction="row" spacing={1}>
-            <Button
-              sx={{ width: "100%", borderRadius: "50vw" }}
-              variant="outlined"
-              color="neutral"
-              onClick={() => setOpenFilter(false)}
-              startDecorator={<Close />}
-            >
-              Cancel
-            </Button>
-            <Button
-              sx={{ width: "100%", borderRadius: "50vw" }}
-              variant="solid"
-              color="neutral"
-              onClick={() => setOpenFilter(false)}
-              startDecorator={<Filter />}
-            >
-              Filter
-            </Button>
-          </Stack>
-        </div>
-      </Snackbar>
-      <ContactActionModal
-        isModalOpen={isModalOpen}
-        setModalOpen={function (value: React.SetStateAction<boolean>): void {
-          setModalOpen(!isModalOpen);
-        }}
-      />
-      <SingleContactActionModal
-        isModalOpen={isModalSingleOpen}
-        setModalOpen={function (value: React.SetStateAction<boolean>): void {
-          setModalSingleOpen(!isModalSingleOpen);
-        }}
-      />
+        </Box>
+        <Snackbar
+          // autoHideDuration={50000}
+          variant="outlined"
+          color="neutral"
+          size="lg"
+          invertedColors
+          open={openFilter}
+          onClose={() => setOpenFilter(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          sx={(theme) => ({
+            background: `linear-gradient(45deg, ${theme.palette.primary[600]} 30%, ${theme.palette.primary[500]} 90%})`,
+            maxWidth: 460,
+          })}
+        >
+          <div>
+            <Typography level="title-lg">Filter</Typography>
+            <Typography sx={{ mt: 1, mb: 2 }}>
+              Are you sure, you want to leave this page without confirming your
+              order?
+            </Typography>
+            <Typography sx={{ mt: 1, mb: 2 }}>
+              Are you sure, you want to leave this page without confirming your
+              order?
+            </Typography>
+            <Typography sx={{ mt: 1, mb: 2 }}>
+              Are you sure, you want to leave this page without confirming your
+              order?
+            </Typography>
+            <Typography sx={{ mt: 1, mb: 2 }}>
+              Are you sure, you want to leave this page without confirming your
+              order?
+            </Typography>
+            <Stack direction="row" spacing={1}>
+              <Button
+                sx={{ width: "100%", borderRadius: "50vw" }}
+                variant="outlined"
+                color="neutral"
+                onClick={() => setOpenFilter(false)}
+                startDecorator={<Close />}
+              >
+                Cancel
+              </Button>
+              <Button
+                sx={{ width: "100%", borderRadius: "50vw" }}
+                variant="solid"
+                color="neutral"
+                onClick={() => setOpenFilter(false)}
+                startDecorator={<Filter />}
+              >
+                Filter
+              </Button>
+            </Stack>
+          </div>
+        </Snackbar>
+        <ContactActionModal
+          isModalOpen={isModalOpen}
+          setModalOpen={function (value: React.SetStateAction<boolean>): void {
+            setModalOpen(!isModalOpen);
+          }}
+        />
+        <SingleContactActionModal
+          isModalOpen={isModalSingleOpen}
+          setModalOpen={function (value: React.SetStateAction<boolean>): void {
+            setModalSingleOpen(!isModalSingleOpen);
+          }}
+        />
+      </Sheet>{" "}
     </>
   );
 }

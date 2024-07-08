@@ -17,6 +17,7 @@ import {
   Table,
   Tooltip,
   Typography,
+  useColorScheme,
 } from "@mui/joy";
 import { Pagination } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -95,8 +96,13 @@ interface IUser {
 
 function ContactTable() {
   const router = useRouter();
+  const { mode } = useColorScheme();
   const [open, setOpen] = React.useState(false);
-  const data: any = [{ email: "test@email.com" }];
+  const data: any = [
+    { email: "test@email.com" },
+    { email: "test@email.com" },
+    { email: "test@email.com" },
+  ];
 
   return (
     <>
@@ -110,6 +116,15 @@ function ContactTable() {
             borderAxis="bothBetween"
             color="neutral"
             size="lg"
+            hoverRow
+            sx={{
+              "& tbody tr:hover": {
+                backgroundColor:
+                  mode == "dark"
+                    ? "var(--mui-palette-grey-900)"
+                    : "var(--mui-palette-grey-100)",
+              },
+            }}
           >
             <thead>
               <tr>
