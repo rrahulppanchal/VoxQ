@@ -5,8 +5,11 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Chip,
+  ChipDelete,
   Divider,
   IconButton,
+  Input,
   Menu,
   MenuItem,
   Sheet,
@@ -18,6 +21,7 @@ import {
   Tabs,
   Typography,
   tabClasses,
+  useColorScheme,
 } from "@mui/joy";
 import Inactive from "./in-active";
 import Filter from "@/assets/icons/Filter";
@@ -26,10 +30,12 @@ import Close from "@/assets/icons/Close";
 import ContactTable from "./contact-table";
 import ContactActionModal from "./contact-action-modal";
 import SingleContactActionModal from "./single-contact-action-modal";
+import SearchUser from "@/assets/icons/SearchUser";
 
 const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
 export default function ContactManagement() {
+  const { mode } = useColorScheme();
   const actionRef = React.useRef<() => void | null>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -74,9 +80,17 @@ export default function ContactManagement() {
               textAlign: "end",
               justifyContent: "end",
               alignItems: "flex-end",
+              flexWrap: "wrap",
               gap: 2,
             }}
           >
+            <Input
+              color="neutral"
+              variant="outlined"
+              placeholder="Search..."
+              startDecorator={<SearchUser />}
+              endDecorator={<Button color="neutral">Search</Button>}
+            />
             <IconButton
               color="neutral"
               variant="outlined"
@@ -135,6 +149,67 @@ export default function ContactManagement() {
             </Stack>
           </Box>
           <Box padding={2} paddingTop={0}>
+            <Stack
+              marginBottom={1}
+              padding={1}
+              borderRadius="8px"
+              display="flex"
+              flexDirection="row"
+              flexWrap="wrap"
+              gap={1}
+              border={
+                mode === "dark"
+                  ? "1px solid var(--mui-palette-grey-800)"
+                  : "1px solid var(--mui-palette-grey-300)"
+              }
+            >
+              <Chip
+                variant="solid"
+                color="neutral"
+                size="lg"
+                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
+                onClick={() => alert("You clicked the Joy Chip!")}
+              >
+                By Name
+              </Chip>
+              <Chip
+                variant="solid"
+                color="neutral"
+                size="lg"
+                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
+                onClick={() => alert("You clicked the Joy Chip!")}
+              >
+                John
+              </Chip>
+              <Chip
+                variant="solid"
+                color="neutral"
+                size="lg"
+                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
+                onClick={() => alert("You clicked the Joy Chip!")}
+              >
+                Filtered by Name
+              </Chip>
+              <Chip
+                variant="solid"
+                color="neutral"
+                size="lg"
+                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
+                onClick={() => alert("You clicked the Joy Chip!")}
+              >
+                Filtered by area
+              </Chip>
+              <Chip
+                variant="solid"
+                color="neutral"
+                size="lg"
+                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
+                onClick={() => alert("You clicked the Joy Chip!")}
+              >
+                Filtered by area
+              </Chip>
+            </Stack>
+
             <ContactTable />
           </Box>
           {/* <Box marginTop={2}>
