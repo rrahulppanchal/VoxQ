@@ -1,6 +1,5 @@
 "use client";
 
-import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
 import {
   Autocomplete,
   Box,
@@ -9,9 +8,16 @@ import {
   Card,
   Chip,
   Divider,
+  Dropdown,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
+  ListDivider,
+  ListItemDecorator,
+  Menu,
+  MenuButton,
+  MenuItem,
   Sheet,
   Stack,
   Step,
@@ -19,11 +25,14 @@ import {
   Stepper,
   Typography,
 } from "@mui/joy";
-import { Grid } from "@mui/material";
+import { Grid, useColorScheme } from "@mui/material";
 import More from "@/assets/icons/More";
+import Edit from "@/assets/icons/Edit";
+import Delete from "@/assets/icons/Delete";
+import Comment from "./comment";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { mode } = useMaterialColorScheme();
+  const { mode } = useColorScheme();
   console.log(params.id);
   return (
     <Box sx={{ flex: 1 }}>
@@ -36,6 +45,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <Box
             sx={{
               px: { xs: 2, md: 2 },
+              background: mode === "dark" ? "#0b0d0e" : "#fbfcfe",
               borderBottom:
                 mode === "dark"
                   ? "1px solid var(--mui-palette-grey-900)"
@@ -250,32 +260,48 @@ export default function Page({ params }: { params: { id: string } }) {
                       Pawnee, IN 12345 <br />
                       United States <br />
                       T: 555-555-5555
-                    </Typography>{" "}
-                    <ButtonGroup variant="plain" spacing={1}>
-                      <Chip
-                        color="primary"
-                        variant="solid"
-                        onClick={() => {
-                          // do something...
-                        }}
-                      >
-                        Next
-                      </Chip>
-                      <Chip
-                        color="neutral"
-                        variant="outlined"
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                        onClick={() => {
-                          // do something...
+                    </Typography>
+
+                    <Dropdown>
+                      <MenuButton
+                        slots={{ root: Chip }}
+                        slotProps={{
+                          root: { variant: "outlined", color: "neutral" },
                         }}
                       >
                         More
-                      </Chip>
-                    </ButtonGroup>
+                      </MenuButton>
+                      <Menu
+                        placement="bottom-end"
+                        variant="outlined"
+                        color="neutral"
+                      >
+                        <MenuItem
+                          onClick={(e) => {
+                            // setCurentUser(row as IUser);
+                            // setMoreOpen(true);
+                          }}
+                        >
+                          <ListItemDecorator sx={{ color: "inherit" }}>
+                            {/* <Users /> */}
+                          </ListItemDecorator>
+                          About
+                        </MenuItem>
+                        <MenuItem>
+                          <ListItemDecorator>
+                            <Edit />
+                          </ListItemDecorator>
+                          Edit
+                        </MenuItem>
+                        <ListDivider />
+                        <MenuItem variant="plain" color="danger">
+                          <ListItemDecorator sx={{ color: "inherit" }}>
+                            <Delete />
+                          </ListItemDecorator>
+                          Delete
+                        </MenuItem>
+                      </Menu>
+                    </Dropdown>
                   </Stack>
                 </Step>
               </Stepper>
@@ -373,6 +399,7 @@ export default function Page({ params }: { params: { id: string } }) {
           </Card>
         </Grid>
       </Grid>
+      <Comment />
     </Box>
   );
 }

@@ -299,3 +299,14 @@ a {
     opacity: 1;
   }
 }
+
+.ql-toolbar.ql-snow {
+  border: 1px solid var(--mui-palette-grey-600) !important;
+  border-radius: 7px 7px 0 0;
+}
+.ql-container.ql-snow {
+  border: 1px solid var(--mui-palette-grey-600) !important;
+  border-radius: 0 0 7px 7px;
+  border-top: none !important;
+  height: 150px !important;
+}
