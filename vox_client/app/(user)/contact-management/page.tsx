@@ -5,11 +5,15 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Checkbox,
   Chip,
   ChipDelete,
   Divider,
+  Grid,
   IconButton,
   Input,
+  List,
+  ListItem,
   Menu,
   MenuItem,
   Sheet,
@@ -31,6 +35,7 @@ import ContactTable from "./contact-table";
 import ContactActionModal from "./contact-action-modal";
 import SingleContactActionModal from "./single-contact-action-modal";
 import SearchUser from "@/assets/icons/SearchUser";
+import Check from "@/assets/icons/Check";
 
 const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
@@ -43,6 +48,7 @@ export default function ContactManagement() {
   const [openFilter, setOpenFilter] = React.useState(false);
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [isModalSingleOpen, setModalSingleOpen] = React.useState(false);
+  const [value, setValue] = React.useState<string[]>([]);
 
   const handleClick = () => {
     if (options[selectedIndex] === "Add multiple contacts") {
@@ -301,25 +307,210 @@ export default function ContactManagement() {
             maxWidth: 460,
           })}
         >
-          <div>
-            <Typography level="title-lg">Filter</Typography>
-            <Typography sx={{ mt: 1, mb: 2 }}>
-              Are you sure, you want to leave this page without confirming your
-              order?
-            </Typography>
-            <Typography sx={{ mt: 1, mb: 2 }}>
-              Are you sure, you want to leave this page without confirming your
-              order?
-            </Typography>
-            <Typography sx={{ mt: 1, mb: 2 }}>
-              Are you sure, you want to leave this page without confirming your
-              order?
-            </Typography>
-            <Typography sx={{ mt: 1, mb: 2 }}>
-              Are you sure, you want to leave this page without confirming your
-              order?
-            </Typography>
-            <Stack direction="row" spacing={1}>
+          <Grid container spacing={1}>
+            <Grid xs={12} sm={12} md={12}>
+              <Sheet
+                variant="plain"
+                sx={{ width: "100%", p: 0, borderRadius: "sm" }}
+              >
+                <Typography
+                  id="rank"
+                  level="body-md"
+                  fontWeight="lg"
+                  sx={{ mb: 1.5 }}
+                >
+                  DATE
+                </Typography>
+                <div role="group" aria-labelledby="rank">
+                  <List
+                    orientation="horizontal"
+                    wrap
+                    sx={{
+                      "--List-gap": "8px",
+                      "--ListItem-radius": "20px",
+                      "--ListItem-minHeight": "32px",
+                      "--ListItem-gap": "4px",
+                    }}
+                  >
+                    {[
+                      "Last Hour",
+                      "Last Day",
+                      "Last Week",
+                      "Last Month",
+                      "Last Year",
+                    ].map((item, index) => (
+                      <ListItem key={item}>
+                        {/* {value.includes(item) && <Check />} */}
+                        <Checkbox
+                          size="sm"
+                          // disabled={index === 0}
+                          disableIcon
+                          overlay
+                          label={item}
+                          checked={value.includes(item)}
+                          variant={value.includes(item) ? "soft" : "outlined"}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            if (event.target.checked) {
+                              setValue((val) => [...val, item]);
+                            } else {
+                              setValue((val) =>
+                                val.filter((text) => text !== item)
+                              );
+                            }
+                          }}
+                          slotProps={{
+                            action: ({ checked }) => ({
+                              sx: checked
+                                ? {
+                                    border: "1px solid",
+                                    borderColor: "primary.500",
+                                  }
+                                : {},
+                            }),
+                          }}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </div>
+              </Sheet>
+            </Grid>
+            <Grid xs={12} sm={12} md={12} marginTop={1}>
+              <Sheet
+                variant="plain"
+                sx={{ width: "100%", p: 0, borderRadius: "sm" }}
+              >
+                <Typography
+                  id="rank"
+                  level="body-md"
+                  fontWeight="lg"
+                  sx={{ mb: 1.5 }}
+                >
+                  STATUS
+                </Typography>
+                <div role="group" aria-labelledby="rank">
+                  <List
+                    orientation="horizontal"
+                    wrap
+                    sx={{
+                      "--List-gap": "8px",
+                      "--ListItem-radius": "20px",
+                      "--ListItem-minHeight": "32px",
+                      "--ListItem-gap": "4px",
+                    }}
+                  >
+                    {["Active", "In Active", "Follow-up", "No-action"].map(
+                      (item, index) => (
+                        <ListItem key={item}>
+                          {/* {value.includes(item) && <Check />} */}
+                          <Checkbox
+                            size="sm"
+                            // disabled={index === 0}
+                            disableIcon
+                            overlay
+                            label={item}
+                            checked={value.includes(item)}
+                            variant={value.includes(item) ? "soft" : "outlined"}
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              if (event.target.checked) {
+                                setValue((val) => [...val, item]);
+                              } else {
+                                setValue((val) =>
+                                  val.filter((text) => text !== item)
+                                );
+                              }
+                            }}
+                            slotProps={{
+                              action: ({ checked }) => ({
+                                sx: checked
+                                  ? {
+                                      border: "1px solid",
+                                      borderColor: "primary.500",
+                                    }
+                                  : {},
+                              }),
+                            }}
+                          />
+                        </ListItem>
+                      )
+                    )}
+                  </List>
+                </div>
+              </Sheet>
+            </Grid>
+            <Grid xs={12} sm={12} md={12} marginTop={1}>
+              <Sheet
+                variant="plain"
+                sx={{ width: "100%", p: 0, borderRadius: "sm" }}
+              >
+                <Typography
+                  id="rank"
+                  level="body-md"
+                  fontWeight="lg"
+                  sx={{ mb: 1.5 }}
+                >
+                  SORT BY
+                </Typography>
+                <div role="group" aria-labelledby="rank">
+                  <List
+                    orientation="horizontal"
+                    wrap
+                    sx={{
+                      "--List-gap": "8px",
+                      "--ListItem-radius": "20px",
+                      "--ListItem-minHeight": "32px",
+                      "--ListItem-gap": "4px",
+                    }}
+                  >
+                    {[
+                      "Recently updated",
+                      "Fresh",
+                      "Action Required",
+                      "In Queue",
+                    ].map((item, index) => (
+                      <ListItem key={item}>
+                        {/* {value.includes(item) && <Check />} */}
+                        <Checkbox
+                          size="sm"
+                          // disabled={index === 0}
+                          disableIcon
+                          overlay
+                          label={item}
+                          checked={value.includes(item)}
+                          variant={value.includes(item) ? "soft" : "outlined"}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            if (event.target.checked) {
+                              setValue((val) => [...val, item]);
+                            } else {
+                              setValue((val) =>
+                                val.filter((text) => text !== item)
+                              );
+                            }
+                          }}
+                          slotProps={{
+                            action: ({ checked }) => ({
+                              sx: checked
+                                ? {
+                                    border: "1px solid",
+                                    borderColor: "primary.500",
+                                  }
+                                : {},
+                            }),
+                          }}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </div>
+              </Sheet>
+            </Grid>
+            <Stack direction="row" spacing={1} width="100%" marginTop={2}>
               <Button
                 sx={{ width: "100%", borderRadius: "50vw" }}
                 variant="outlined"
@@ -339,7 +530,7 @@ export default function ContactManagement() {
                 Filter
               </Button>
             </Stack>
-          </div>
+          </Grid>
         </Snackbar>
         <ContactActionModal
           isModalOpen={isModalOpen}
