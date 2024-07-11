@@ -30,8 +30,10 @@ import More from "@/assets/icons/More";
 import Edit from "@/assets/icons/Edit";
 import Delete from "@/assets/icons/Delete";
 import Comment from "./comment";
+import React, { SetStateAction } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
+  const [isModalOpen, setModalOpen] = React.useState<boolean>(false);
   const { mode } = useColorScheme();
   console.log(params.id);
   return (
@@ -287,7 +289,7 @@ export default function Page({ params }: { params: { id: string } }) {
                           </ListItemDecorator>
                           About
                         </MenuItem>
-                        <MenuItem>
+                        <MenuItem onClick={() => setModalOpen(true)}>
                           <ListItemDecorator>
                             <Edit />
                           </ListItemDecorator>
@@ -399,7 +401,12 @@ export default function Page({ params }: { params: { id: string } }) {
           </Card>
         </Grid>
       </Grid>
-      <Comment />
+      <Comment
+        isModalOpen={isModalOpen}
+        setModalOpen={function (value: SetStateAction<boolean>): void {
+          setModalOpen(value);
+        }}
+      />
     </Box>
   );
 }

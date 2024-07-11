@@ -7,10 +7,13 @@ import "react-quill/dist/quill.snow.css";
 
 import {
   Button,
+  Checkbox,
   Chip,
   Divider,
   FormControl,
   Grid,
+  List,
+  ListItem,
   Modal,
   ModalDialog,
   ModalOverflow,
@@ -18,7 +21,14 @@ import {
   Typography,
 } from "@mui/joy";
 
-function Comment() {
+interface Props {
+  isModalOpen: boolean;
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Comment: React.FC<Props> = ({ isModalOpen, setModalOpen }) => {
+  const [value, setValue] = React.useState<string[]>([]);
+
   const contactSchema = Yup.object().shape({
     // assignee: Yup.string().required("Select assignee"),
     // status: Yup.number().required("Select status"),
@@ -33,7 +43,7 @@ function Comment() {
   return (
     <>
       <Modal
-        open={true}
+        open={isModalOpen}
         onClose={() => {}}
         sx={{
           bgcolor: "transparent",
@@ -101,36 +111,71 @@ function Comment() {
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid xs={12} sm={12} md={12} marginTop={2}>
-                      <Typography level="title-md">Will be notified</Typography>
+                      <Typography level="title-md">
+                        Who will be notified
+                      </Typography>
                       <Grid
                         marginTop={1}
                         padding={1}
                         width="100%"
                         borderRadius="8px"
                         border="1px solid grey"
-                        display="flex"
-                        gap={1}
                       >
-                        <Chip
-                          variant="outlined"
-                          color="neutral"
-                          size="lg"
-                          // startDecorator={<Avatar size="sm" src={`/static/images/avatar/1.jpg`} />}
-                          // endDecorator={<CheckIcon fontSize="md" />}
-                          onClick={() => alert("You clicked the Joy Chip!")}
+                        <List
+                          orientation="horizontal"
+                          wrap
+                          sx={{
+                            "--List-gap": "8px",
+                            "--ListItem-radius": "20px",
+                            "--ListItem-minHeight": "32px",
+                            "--ListItem-gap": "4px",
+                          }}
                         >
-                          Mark Manson
-                        </Chip>
-                        <Chip
-                          variant="outlined"
-                          color="neutral"
-                          size="lg"
-                          // startDecorator={<Avatar size="sm" src={`/static/images/avatar/1.jpg`} />}
-                          // endDecorator={<CheckIcon fontSize="md" />}
-                          onClick={() => alert("You clicked the Joy Chip!")}
-                        >
-                          Mark Manson
-                        </Chip>
+                          {[
+                            "Clementina DuBuque",
+                            "Glenna Reichert",
+                            "Nicholas Runolfsdottir V",
+                            "Mrs. Dennis Schulist",
+                            "Chelsey Dietrich",
+                            "Patricia Lebsack",
+                          ].map((item, index) => (
+                            <ListItem key={item}>
+                              {/* {value.includes(item) && <Check />} */}
+                              <Checkbox
+                                size="sm"
+                                // disabled={index === 0}
+                                disableIcon
+                                overlay
+                                label={item}
+                                checked={value.includes(item)}
+                                variant={
+                                  value.includes(item) ? "soft" : "outlined"
+                                }
+                                onChange={(
+                                  event: React.ChangeEvent<HTMLInputElement>
+                                ) => {
+                                  if (event.target.checked) {
+                                    setValue((val) => [...val, item]);
+                                  } else {
+                                    setValue((val) =>
+                                      val.filter((text) => text !== item)
+                                    );
+                                  }
+                                }}
+                                slotProps={{
+                                  action: ({ checked }) => ({
+                                    sx: checked
+                                      ? {
+                                          border: "1px solid",
+                                          borderColor: "primary.500",
+                                        }
+                                      : {},
+                                  }),
+                                }}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -143,7 +188,7 @@ function Comment() {
                         type="button"
                         variant="outlined"
                         onClick={() => {
-                          //   setModalOpen(false);
+                          setModalOpen(false);
                           // setCurrentUserData(null);
                         }}
                       >
@@ -169,6 +214,6 @@ function Comment() {
       </Modal>
     </>
   );
-}
+};
 
 export default Comment;
