@@ -33,3 +33,34 @@ enum Role {
   MODERATOR
   ADMIN
 }
+
+
+model tbl_contacts {
+  id    Int     @id @default(autoincrement())
+  email  String
+  first_name String
+  last_name String?
+  phone String
+  assigned_to Int
+  assigned_by Int
+  verified_by Int
+  created_by Int
+  status Int
+  is_verified Boolean @default(false)
+  is_deleted Boolean @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  logs tbl_contacts_logs[] @relation("ContactLogs")
+}
+
+model tbl_contacts_logs {
+  id    Int     @id @default(autoincrement())
+  contact_id Int
+  title String
+  description String
+  action_id Int
+  created_at DateTime @default(now())
+
+  contact tbl_contacts @relation("ContactLogs", fields: [contact_id], references: [id])
+}

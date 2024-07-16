@@ -3,9 +3,9 @@ import { z, ZodError } from "zod";
 import ResponseHandler from "../../utils/shared";
 
 class DataValidator {
-  private schema: z.ZodObject<any, any>;
+  private schema: any;
 
-  constructor(schema: z.ZodObject<any, any>) {
+  constructor(schema: any) {
     this.schema = schema;
   }
 
