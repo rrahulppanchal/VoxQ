@@ -36,7 +36,7 @@ class contactRouter {
       this.contact.deleteContact.bind(this.contact)
     );
 
-    this.router.get(
+    this.router.post(
       "/get-contacts",
       this.contact.getContacts.bind(this.contact)
     );

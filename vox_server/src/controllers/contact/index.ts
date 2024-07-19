@@ -127,65 +127,74 @@ class Contact {
 
   public async getContacts(req: Request, res: Response) {
     try {
-      const {
-        page = 1,
-        limit = 10,
-        search = "",
-        verified = 3,
-        status = 0,
-      } = req.query;
-
-      const searchQuery = search.toString();
-      const pageNumber = parseInt(page as string, 10) || 1;
-      const pageSize = parseInt(limit as string, 10) || 10;
+      const { search = "", page = "1", limit = "10", status, date } = req.body;
+      const pageNumber = parseInt(page, 10);
+      const pageSize = parseInt(limit, 10);
 
       const where: any = {
         is_deleted: false,
-        OR: [
-          { first_name: { contains: searchQuery, mode: "insensitive" } },
-          { last_name: { contains: searchQuery, mode: "insensitive" } },
-          { email: { contains: searchQuery, mode: "insensitive" } },
-          { phone: { contains: searchQuery, mode: "insensitive" } },
-        ],
+        OR: ["first_name", "last_name", "email", "phone"].map((field) => ({
+          [field]: { contains: search, mode: "insensitive" },
+        })),
       };
 
-      if (+verified == 0) {
-        where.is_verified = false;
-      }
-      if (+verified == 1) {
-        where.is_verified = true;
+      const statusMap: any = {
+        active: 1,
+        inActive: 2,
+        followUp: 3,
+        noAction: 4,
+        verified: 5,
+        unVerified: 6,
+      };
+      const statusConditions = Object.entries(status)
+        .filter(([_, value]) => value)
+        .map(([key, _]) => statusMap[key]);
+
+      if (statusConditions.length) where.status = { in: statusConditions };
+
+      const dateRanges: any = {
+        lastYear: 365,
+        lastMonth: 30,
+        lastWeek: 7,
+        lastDay: 1,
+        lastHour: 1 / 24,
+      };
+
+      // date object must be in descending order
+      const selectedDateRange = Object.entries(date).find(
+        ([key, value]) => value && dateRanges[key]
+      )?.[0];
+
+      if (selectedDateRange) {
+        where.updated_at = {
+          gte: new Date(
+            Date.now() - dateRanges[selectedDateRange] * 24 * 60 * 60 * 1000
+          ),
+        };
       }
 
-      if (status != 0) {
-        where.status = Number(status);
-      }
-
-      const totalCount = await this.prisma.tbl_contacts.count({
-        where,
-      });
-
-      const contacts = await this.prisma.tbl_contacts.findMany({
-        where,
-        skip: (pageNumber - 1) * pageSize,
-        take: pageSize,
-      });
+      const [totalCount, contacts] = await Promise.all([
+        this.prisma.tbl_contacts.count({ where }),
+        this.prisma.tbl_contacts.findMany({
+          where,
+          skip: (pageNumber - 1) * pageSize,
+          take: pageSize,
+        }),
+      ]);
 
       const totalPages = Math.ceil(totalCount / pageSize);
 
       const response = new ResponseHandler(
         {
           contacts,
-          meta: {
-            totalCount,
-            totalPages,
-            currentPage: pageNumber,
-          },
+          meta: { totalCount, totalPages, currentPage: pageNumber },
         },
         "Success",
         200
       );
       res.status(response.getStatusCode()).json(response.getResponse());
     } catch (error) {
+      console.error(error);
       const response = new ResponseHandler(null, "Failed to get data", 400);
       res.status(response.getStatusCode()).json(response.getResponse());
     } finally {
