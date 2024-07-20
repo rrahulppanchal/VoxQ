@@ -36,31 +36,53 @@ enum Role {
 
 
 model tbl_contacts {
-  id    Int     @id @default(autoincrement())
-  email  String
-  first_name String
-  last_name String?
-  phone String
+  id          Int                  @id @default(autoincrement())
+  email       String
+  first_name  String
+  last_name   String?
+  phone       String
   assigned_to Int
   assigned_by Int
   verified_by Int
-  created_by Int
-  status Int
-  is_verified Boolean @default(false)
-  is_deleted Boolean @default(false)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  created_by  Int
+  status      Int
+  is_verified Boolean              @default(false)
+  qualified   Boolean              @default(false)
+  is_deleted  Boolean              @default(false)
+  created_at  DateTime             @default(now())
+  updated_at  DateTime             @default(now())
 
-  logs tbl_contacts_logs[] @relation("ContactLogs")
+  logs        tbl_contacts_logs[]
+  address     tbl_contact_address?
+
+  @@index([email, phone])
+  @@index([assigned_to, status])
 }
 
 model tbl_contacts_logs {
-  id    Int     @id @default(autoincrement())
-  contact_id Int
-  title String
+  id          Int           @id @default(autoincrement())
+  contact_id  Int
+  title       String
   description String
-  action_id Int
-  created_at DateTime @default(now())
+  action_id   Int
+  created_at  DateTime      @default(now())
 
-  contact tbl_contacts @relation("ContactLogs", fields: [contact_id], references: [id])
+  contact     tbl_contacts  @relation(fields: [contact_id], references: [id])
+
+  @@index([contact_id, created_at])
+}
+
+model tbl_contact_address {
+  id         Int          @id @default(autoincrement())
+  contact_id Int          @unique
+  country    String
+  pincode    Int
+  city       String
+  state      String
+  street     String
+  other      String?
+  
+  contact    tbl_contacts @relation(fields: [contact_id], references: [id])
+
+  @@index([country, state, city])
 }
