@@ -127,15 +127,40 @@ class Contact {
 
   public async getContacts(req: Request, res: Response) {
     try {
-      const { search = "", page = "1", limit = "10", status, date } = req.body;
+      const {
+        search = "",
+        page = "1",
+        limit = "10",
+        contact = false,
+        status,
+        date,
+        sortBy,
+      } = req.body;
       const pageNumber = parseInt(page, 10);
       const pageSize = parseInt(limit, 10);
 
+      const numericSearch = !isNaN(Number(search)) ? Number(search) : null;
+
       const where: any = {
         is_deleted: false,
-        OR: ["first_name", "last_name", "email", "phone"].map((field) => ({
-          [field]: { contains: search, mode: "insensitive" },
-        })),
+        qualified: contact,
+        OR: [
+          ...["first_name", "last_name", "email", "phone"].map((field) => ({
+            [field]: { contains: search, mode: "insensitive" },
+          })),
+          {
+            address: {
+              OR: [
+                { country: { contains: search, mode: "insensitive" } },
+                ...(numericSearch !== null ? [{ pincode: numericSearch }] : []),
+                { city: { contains: search, mode: "insensitive" } },
+                { state: { contains: search, mode: "insensitive" } },
+                { street: { contains: search, mode: "insensitive" } },
+                { other: { contains: search, mode: "insensitive" } },
+              ],
+            },
+          },
+        ],
       };
 
       const statusMap: any = {
@@ -146,6 +171,7 @@ class Contact {
         verified: 5,
         unVerified: 6,
       };
+
       const statusConditions = Object.entries(status)
         .filter(([_, value]) => value)
         .map(([key, _]) => statusMap[key]);
@@ -173,10 +199,42 @@ class Contact {
         };
       }
 
+      if (sortBy.recentlyUpdated) {
+        const recentlyUpdatedVal = 1 / 24;
+        where.updated_at = {
+          gte: new Date(Date.now() - recentlyUpdatedVal * 24 * 60 * 60 * 1000),
+        };
+      }
+
+      if (sortBy.fresh) {
+        const freshVal = 7;
+        where.created_at = {
+          gte: new Date(Date.now() - freshVal * 24 * 60 * 60 * 1000),
+        };
+      }
+
+      if (sortBy.actionRequiured) {
+        const actionReqVal = 3;
+        where.updated_at = {
+          gte: new Date(Date.now() - actionReqVal * 24 * 60 * 60 * 1000),
+        };
+        where.qualified = true;
+      }
+
+      if (sortBy.inQueue) {
+        const queueReqVal = 1;
+        where.updated_at = {
+          gte: new Date(Date.now() - queueReqVal * 24 * 60 * 60 * 1000),
+        };
+      }
+
       const [totalCount, contacts] = await Promise.all([
         this.prisma.tbl_contacts.count({ where }),
         this.prisma.tbl_contacts.findMany({
           where,
+          include: {
+            address: true,
+          },
           skip: (pageNumber - 1) * pageSize,
           take: pageSize,
         }),
