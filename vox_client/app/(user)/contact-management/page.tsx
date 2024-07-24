@@ -23,6 +23,7 @@ import {
   TabList,
   TabPanel,
   Tabs,
+  Tooltip,
   Typography,
   tabClasses,
   useColorScheme,
@@ -36,19 +37,58 @@ import ContactActionModal from "./contact-action-modal";
 import SingleContactActionModal from "./single-contact-action-modal";
 import SearchUser from "@/assets/icons/SearchUser";
 import Check from "@/assets/icons/Check";
+import { useContacts } from "@/services/contact.service";
+import { FilterState } from "@/types";
 
 const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
+const filterInitialState: FilterState = {
+  page: 1,
+  limit: 10,
+  search: "",
+  contact: false,
+  date: {
+    lastYear: false,
+    lastMonth: false,
+    lastWeek: false,
+    lastDay: false,
+    lastHour: false,
+  },
+  status: {
+    active: false,
+    inActive: false,
+    followUp: false,
+    noAction: false,
+    verified: false,
+    unVerified: false,
+  },
+  sortBy: {
+    recentlyUpdated: false,
+    fresh: false,
+    actionRequired: false,
+    inQueue: false,
+  },
+};
+
 export default function ContactManagement() {
   const { mode } = useColorScheme();
+
   const actionRef = React.useRef<() => void | null>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
+
   const [open, setOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [openFilter, setOpenFilter] = React.useState(false);
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [isModalSingleOpen, setModalSingleOpen] = React.useState(false);
   const [value, setValue] = React.useState<string[]>([]);
+  const [filterField, setFilterField] = React.useState<string[]>([]);
+  const [filterState, setFilterState] =
+    React.useState<FilterState>(filterInitialState);
+
+  const contactsData = useContacts(filterState);
+
+  console.log(contactsData, "dsdb");
 
   const handleClick = () => {
     if (options[selectedIndex] === "Add multiple contacts") {
@@ -65,6 +105,63 @@ export default function ContactManagement() {
   ) => {
     setSelectedIndex(index);
     setOpen(false);
+  };
+
+  const paginationHandleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    event.preventDefault();
+    await setFilterState((prevState) => ({
+      ...prevState,
+      page: value,
+    }));
+    await contactsData.refetch();
+  };
+
+  const handleFilterChange = async (data = value) => {
+    setFilterField(data);
+    setOpenFilter(false);
+    const newDateState = {
+      lastHour: data.includes("Last Hour"),
+      lastWeek: data.includes("Last Week"),
+      lastMonth: data.includes("Last Month"),
+      lastDay: data.includes("Last Day"),
+      lastYear: data.includes("Last Year"),
+    };
+
+    const newStatusState = {
+      active: data.includes("Active"),
+      inActive: data.includes("In Active"),
+      followUp: data.includes("Folloe-up"),
+      noAction: data.includes("No-action"),
+      verified: data.includes("Verified"),
+      unVerified: data.includes("Unverified"),
+    };
+
+    const newSortByState = {
+      recentlyUpdated: data.includes("Recently visited"),
+      fresh: data.includes("Fresh"),
+      actionRequired: data.includes("Action needed"),
+      inQueue: data.includes("In Queue"),
+    };
+
+    await setFilterState((prevState) => ({
+      ...prevState,
+      date: {
+        ...prevState.date,
+        ...newDateState,
+      },
+      status: {
+        ...prevState.status,
+        ...newStatusState,
+      },
+      sortBy: {
+        ...prevState.sortBy,
+        ...newSortByState,
+      },
+    }));
+    await contactsData.refetch();
   };
 
   return (
@@ -95,7 +192,41 @@ export default function ContactManagement() {
               variant="outlined"
               placeholder="Search..."
               startDecorator={<SearchUser />}
-              endDecorator={<Button color="neutral">Search</Button>}
+              value={filterState.search}
+              onChange={(e) => {
+                setFilterState((prevState) => ({
+                  ...prevState,
+                  search: e.target.value,
+                }));
+              }}
+              endDecorator={
+                <Stack direction="row" gap={2}>
+                  <Button
+                    color="neutral"
+                    onClick={() => {
+                      contactsData.refetch();
+                    }}
+                  >
+                    Search
+                  </Button>
+
+                  {filterState.search?.length > 0 && (
+                    <IconButton
+                      color="danger"
+                      variant="solid"
+                      onClick={async () => {
+                        await setFilterState((prevState) => ({
+                          ...prevState,
+                          search: "",
+                        }));
+                        await contactsData.refetch();
+                      }}
+                    >
+                      <Close />
+                    </IconButton>
+                  )}
+                </Stack>
+              }
             />
             <IconButton
               color="neutral"
@@ -155,68 +286,68 @@ export default function ContactManagement() {
             </Stack>
           </Box>
           <Box padding={2} paddingTop={0}>
-            <Stack
-              marginBottom={1}
-              padding={1}
-              borderRadius="8px"
-              display="flex"
-              flexDirection="row"
-              flexWrap="wrap"
-              gap={1}
-              border={
-                mode === "dark"
-                  ? "1px solid var(--mui-palette-grey-800)"
-                  : "1px solid var(--mui-palette-grey-300)"
-              }
-            >
-              <Chip
-                variant="solid"
-                color="neutral"
-                size="lg"
-                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
-                onClick={() => alert("You clicked the Joy Chip!")}
+            {filterField.length ? (
+              <Stack
+                marginBottom={1}
+                padding={1}
+                borderRadius="8px"
+                display="flex"
+                flexDirection="row"
+                flexWrap="wrap"
+                gap={1}
+                border={
+                  mode === "dark"
+                    ? "1px solid var(--mui-palette-grey-800)"
+                    : "1px solid var(--mui-palette-grey-300)"
+                }
               >
-                By Name
-              </Chip>
-              <Chip
-                variant="solid"
-                color="neutral"
-                size="lg"
-                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
-                onClick={() => alert("You clicked the Joy Chip!")}
-              >
-                John
-              </Chip>
-              <Chip
-                variant="solid"
-                color="neutral"
-                size="lg"
-                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
-                onClick={() => alert("You clicked the Joy Chip!")}
-              >
-                Filtered by Name
-              </Chip>
-              <Chip
-                variant="solid"
-                color="neutral"
-                size="lg"
-                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
-                onClick={() => alert("You clicked the Joy Chip!")}
-              >
-                Filtered by area
-              </Chip>
-              <Chip
-                variant="solid"
-                color="neutral"
-                size="lg"
-                endDecorator={<ChipDelete onDelete={() => alert("Delete")} />}
-                onClick={() => alert("You clicked the Joy Chip!")}
-              >
-                Filtered by area
-              </Chip>
-            </Stack>
+                <Tooltip
+                  arrow
+                  title="Filtering by..."
+                  color="primary"
+                  placement="top-start"
+                  size="md"
+                  variant="outlined"
+                >
+                  <IconButton color="neutral" variant="plain" size="sm">
+                    <Filter />
+                  </IconButton>
+                </Tooltip>
+                {filterField.map((item, index) => (
+                  <Chip
+                    key={index}
+                    variant="outlined"
+                    color="neutral"
+                    size="lg"
+                    endDecorator={
+                      <ChipDelete
+                        onDelete={async () => {
+                          const filteredArray = await filterField.filter(
+                            (value) => !item.includes(value)
+                          );
+                          await setFilterField(filteredArray);
+                          await setValue(filteredArray);
+                          await handleFilterChange(filteredArray);
+                        }}
+                      />
+                    }
+                    // onClick={() => {
+                    //   const filteredArray = filterField.filter(
+                    //     (value) => !item.includes(value)
+                    //   );
+                    //   setFilterField(filteredArray);
+                    // }}
+                  >
+                    {item}
+                  </Chip>
+                ))}
+              </Stack>
+            ) : null}
 
-            <ContactTable />
+            <ContactTable
+              data={contactsData.data?.data}
+              paginationHandleChange={paginationHandleChange}
+            />
           </Box>
           {/* <Box marginTop={2}>
           <Tabs
@@ -300,7 +431,10 @@ export default function ContactManagement() {
           size="lg"
           invertedColors
           open={openFilter}
-          onClose={() => setOpenFilter(false)}
+          onClose={() => {
+            setValue(filterField);
+            setOpenFilter(false);
+          }}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           sx={(theme) => ({
             background: `linear-gradient(45deg, ${theme.palette.primary[600]} 30%, ${theme.palette.primary[500]} 90%})`,
@@ -401,43 +535,48 @@ export default function ContactManagement() {
                       "--ListItem-gap": "4px",
                     }}
                   >
-                    {["Active", "In Active", "Follow-up", "No-action"].map(
-                      (item, index) => (
-                        <ListItem key={item}>
-                          {/* {value.includes(item) && <Check />} */}
-                          <Checkbox
-                            size="sm"
-                            // disabled={index === 0}
-                            disableIcon
-                            overlay
-                            label={item}
-                            checked={value.includes(item)}
-                            variant={value.includes(item) ? "soft" : "outlined"}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                              if (event.target.checked) {
-                                setValue((val) => [...val, item]);
-                              } else {
-                                setValue((val) =>
-                                  val.filter((text) => text !== item)
-                                );
-                              }
-                            }}
-                            slotProps={{
-                              action: ({ checked }) => ({
-                                sx: checked
-                                  ? {
-                                      border: "1px solid",
-                                      borderColor: "primary.500",
-                                    }
-                                  : {},
-                              }),
-                            }}
-                          />
-                        </ListItem>
-                      )
-                    )}
+                    {[
+                      "Active",
+                      "In Active",
+                      "Follow-up",
+                      "No-action",
+                      "Verified",
+                      "Unverified",
+                    ].map((item, index) => (
+                      <ListItem key={item}>
+                        {/* {value.includes(item) && <Check />} */}
+                        <Checkbox
+                          size="sm"
+                          // disabled={index === 0}
+                          disableIcon
+                          overlay
+                          label={item}
+                          checked={value.includes(item)}
+                          variant={value.includes(item) ? "soft" : "outlined"}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            if (event.target.checked) {
+                              setValue((val) => [...val, item]);
+                            } else {
+                              setValue((val) =>
+                                val.filter((text) => text !== item)
+                              );
+                            }
+                          }}
+                          slotProps={{
+                            action: ({ checked }) => ({
+                              sx: checked
+                                ? {
+                                    border: "1px solid",
+                                    borderColor: "primary.500",
+                                  }
+                                : {},
+                            }),
+                          }}
+                        />
+                      </ListItem>
+                    ))}
                   </List>
                 </div>
               </Sheet>
@@ -467,9 +606,9 @@ export default function ContactManagement() {
                     }}
                   >
                     {[
-                      "Recently updated",
+                      "Action needed",
+                      "Recently visited",
                       "Fresh",
-                      "Action Required",
                       "In Queue",
                     ].map((item, index) => (
                       <ListItem key={item}>
@@ -515,7 +654,10 @@ export default function ContactManagement() {
                 sx={{ width: "100%", borderRadius: "50vw" }}
                 variant="outlined"
                 color="neutral"
-                onClick={() => setOpenFilter(false)}
+                onClick={() => {
+                  setValue(filterField);
+                  setOpenFilter(false);
+                }}
                 startDecorator={<Close />}
               >
                 Cancel
@@ -524,7 +666,7 @@ export default function ContactManagement() {
                 sx={{ width: "100%", borderRadius: "50vw" }}
                 variant="solid"
                 color="neutral"
-                onClick={() => setOpenFilter(false)}
+                onClick={() => handleFilterChange(value)}
                 startDecorator={<Filter />}
               >
                 Filter

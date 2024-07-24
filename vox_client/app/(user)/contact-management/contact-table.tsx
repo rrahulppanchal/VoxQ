@@ -21,7 +21,7 @@ import {
 } from "@mui/joy";
 import { Pagination } from "@mui/material";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 function createData(
   userName: string,
@@ -49,60 +49,29 @@ function createData(
   };
 }
 
-const rows = [
-  createData(
-    "johndoe",
-    "John",
-    "Doe",
-    "johndoe@email.com",
-    "Admin",
-    "+91 9999999999",
-    "2022-02-03",
-    "2024-02-03",
-    true,
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo unde aspernatur illo labore consequatur magni est, expedita, exercitationem laudantium iure alias, porro facilis doloremque. Explicabo facilis id molestiae ipsum est?"
-  ),
-  createData(
-    "johndoe",
-    "John 1",
-    "Doe",
-    "johndoe@email.com",
-    "Admin",
-    "+91 9999999999",
-    "2022-06-02",
-    "2024-06-02",
-    false,
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo unde aspernatur illo labore consequatur magni est, expedita, exercitationem laudantium iure alias, porro facilis doloremque. Explicabo facilis id molestiae ipsum est?"
-  ),
-];
-
-interface IUser {
-  idstring: number;
-  user_name: string;
-  user_email: string;
-  password?: string;
-  first_name: string;
-  last_name: string;
-  description: string;
-  phone: string;
-  j_date: Date | string;
-  l_date?: Date | string | null;
-  user_role: string;
-  is_deleted?: false;
-  is_active?: false;
-  created_at?: Date;
-  updated_at?: Date;
+interface Props {
+  data: any;
+  paginationHandleChange:
+    | ((event: ChangeEvent<unknown>, page: number) => void)
+    | undefined;
 }
 
-function ContactTable() {
+const ContactTable: React.FC<Props> = ({ data, paginationHandleChange }) => {
   const router = useRouter();
   const { mode } = useColorScheme();
   const [open, setOpen] = React.useState(false);
-  const data: any = [
-    { email: "test@email.com" },
-    { email: "test@email.com" },
-    { email: "test@email.com" },
-  ];
+
+  const statusMap: any = {
+    1: { color: "success", label: "Active" },
+    2: { color: "danger", label: "In Active" },
+    3: { color: "warning", label: "Follow up" },
+    4: { color: "neutral", label: "No action" },
+    5: { color: "success", label: "Verified" },
+    default: { color: "danger", label: "Unverified" },
+  };
+
+  const getStatusProps = (status: any) =>
+    statusMap[status] || statusMap.default;
 
   return (
     <>
@@ -130,13 +99,14 @@ function ContactTable() {
               <tr>
                 <th>User</th>
                 <th>Email</th>
-                <th>Activity</th>
+                <th>Phone</th>
+                <th>Status</th>
                 <th style={{ width: "90px" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {data?.length > 0 ? (
-                data?.map((row: any, index: number) => (
+              {data?.contacts?.length > 0 ? (
+                data?.contacts?.map((row: any, index: number) => (
                   <>
                     <Tooltip
                       variant="outlined"
@@ -230,7 +200,7 @@ function ContactTable() {
                               router.push("/contact-management/contact/3");
                             }}
                           >
-                            {row.email}
+                            {row.first_name + " " + row.last_name}
                             {/* <Chip
                         disabled={false}
                         // onClick={function () {}}
@@ -243,15 +213,15 @@ function ContactTable() {
                           </span>
                         </td>
                         <td>{row.email}</td>
+                        <td>{row.phone}</td>
                         <td>
                           <Chip
-                            color={row.is_active ? "success" : "danger"}
+                            color={getStatusProps(row.status).color}
                             disabled={false}
-                            // onClick={function () {}}
                             size="md"
                             variant="soft"
                           >
-                            {row.is_active ? "Active" : "Inactive"}
+                            {getStatusProps(row.status).label}
                           </Chip>
                         </td>
                         <td>
@@ -310,7 +280,7 @@ function ContactTable() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4}>
+                  <td colSpan={5}>
                     <Sheet
                       sx={{
                         display: "flex",
@@ -327,7 +297,7 @@ function ContactTable() {
             </tbody>
             <tfoot>
               <tr>
-                <th colSpan={4}>
+                <th colSpan={5}>
                   <Stack
                     spacing={2}
                     sx={{
@@ -335,7 +305,14 @@ function ContactTable() {
                       alignItems: "flex-end",
                     }}
                   >
-                    <Pagination count={10} shape="rounded" />
+                    {data?.contacts?.length > 0 && (
+                      <Pagination
+                        count={data?.meta?.totalPages}
+                        page={data?.meta?.currentPage}
+                        onChange={paginationHandleChange}
+                        shape="rounded"
+                      />
+                    )}
                   </Stack>
                 </th>
               </tr>
@@ -345,6 +322,6 @@ function ContactTable() {
       </Grid>
     </>
   );
-}
+};
 
 export default ContactTable;

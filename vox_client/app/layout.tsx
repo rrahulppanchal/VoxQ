@@ -5,6 +5,8 @@ import "./globals.css";
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import { StyledEngineProvider } from "@mui/joy/styles";
 import { materialTheme, theme } from "@/component/theme/colors";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import {
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
   THEME_ID as MATERIAL_THEME_ID,
@@ -29,25 +31,28 @@ export default function RootLayout({
 }>) {
   const [isLoading, setIsLoading] = useState(false);
   const setLoading = useCallback((state: boolean) => setIsLoading(state), []);
+  const queryClient = new QueryClient();
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {getInitColorSchemeScript()}
-        <StyledEngineProvider injectFirst>
-          <JoyCssVarsProvider theme={theme}>
-            <MaterialCssVarsProvider
-              // defaultMode="system"
-              theme={{ [MATERIAL_THEME_ID]: materialTheme }}
-            >
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <LoaderContext.Provider value={{ isLoading, setLoading }}>
-                  {children}
-                </LoaderContext.Provider>
-              </LocalizationProvider>
-            </MaterialCssVarsProvider>
-          </JoyCssVarsProvider>
-        </StyledEngineProvider>
+        <QueryClientProvider client={queryClient}>
+          {getInitColorSchemeScript()}
+          <StyledEngineProvider injectFirst>
+            <JoyCssVarsProvider theme={theme}>
+              <MaterialCssVarsProvider
+                // defaultMode="system"
+                theme={{ [MATERIAL_THEME_ID]: materialTheme }}
+              >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <LoaderContext.Provider value={{ isLoading, setLoading }}>
+                    {children}
+                  </LoaderContext.Provider>
+                </LocalizationProvider>
+              </MaterialCssVarsProvider>
+            </JoyCssVarsProvider>
+          </StyledEngineProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

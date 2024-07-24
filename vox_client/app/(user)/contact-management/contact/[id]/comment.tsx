@@ -88,6 +88,36 @@ const Comment: React.FC<Props> = ({ isModalOpen, setModalOpen }) => {
                             : false
                         }
                       >
+                        <Typography level="title-md">Title</Typography>
+                        <Textarea
+                          placeholder="Write action name..."
+                          minRows={1}
+                          sx={{
+                            "&::before": {
+                              display: "none",
+                            },
+                            "&:focus-within": {
+                              outline:
+                                "2px solid var(--Textarea-focusedHighlight)",
+                              outlineOffset: "2px",
+                            },
+                            margin: "0 0 10px 0",
+                          }}
+                        />
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1} display="flex" alignItems="end">
+                    <Grid xs={12} sm={12} md={12}>
+                      <FormControl
+                        id="free-solo-demo"
+                        sx={{ display: "flex", gap: "8px" }}
+                        error={
+                          formik.touched.assignee && formik.errors.assignee
+                            ? true
+                            : false
+                        }
+                      >
                         {/* <Textarea
                           placeholder="Write your comment here…"
                           minRows={7}
@@ -102,6 +132,7 @@ const Comment: React.FC<Props> = ({ isModalOpen, setModalOpen }) => {
                             },
                           }}
                         /> */}
+                        <Typography level="title-md">Description</Typography>
                         <ReactQuill
                           theme="snow"
                           placeholder="Write something..."
