@@ -39,6 +39,7 @@ import SearchUser from "@/assets/icons/SearchUser";
 import Check from "@/assets/icons/Check";
 import { useContacts } from "@/services/contact.service";
 import { FilterState } from "@/types";
+import { useLoader } from "@/store/loader-context";
 
 const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
@@ -72,6 +73,7 @@ const filterInitialState: FilterState = {
 
 export default function ContactManagement() {
   const { mode } = useColorScheme();
+  const { setLoading } = useLoader();
 
   const actionRef = React.useRef<() => void | null>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
@@ -87,8 +89,7 @@ export default function ContactManagement() {
     React.useState<FilterState>(filterInitialState);
 
   const contactsData = useContacts(filterState);
-
-  console.log(contactsData, "dsdb");
+  setLoading(contactsData?.isFetching);
 
   const handleClick = () => {
     if (options[selectedIndex] === "Add multiple contacts") {
@@ -133,7 +134,7 @@ export default function ContactManagement() {
     const newStatusState = {
       active: data.includes("Active"),
       inActive: data.includes("In Active"),
-      followUp: data.includes("Folloe-up"),
+      followUp: data.includes("Follow-up"),
       noAction: data.includes("No-action"),
       verified: data.includes("Verified"),
       unVerified: data.includes("Unverified"),
@@ -201,19 +202,10 @@ export default function ContactManagement() {
               }}
               endDecorator={
                 <Stack direction="row" gap={2}>
-                  <Button
-                    color="neutral"
-                    onClick={() => {
-                      contactsData.refetch();
-                    }}
-                  >
-                    Search
-                  </Button>
-
                   {filterState.search?.length > 0 && (
                     <IconButton
-                      color="danger"
-                      variant="solid"
+                      color="neutral"
+                      variant="plain"
                       onClick={async () => {
                         await setFilterState((prevState) => ({
                           ...prevState,
@@ -225,6 +217,14 @@ export default function ContactManagement() {
                       <Close />
                     </IconButton>
                   )}
+                  <Button
+                    color="neutral"
+                    onClick={() => {
+                      contactsData.refetch();
+                    }}
+                  >
+                    Search
+                  </Button>
                 </Stack>
               }
             />

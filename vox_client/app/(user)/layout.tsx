@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {isLoading && <UpProgress />}
+        <UpProgress loader={isLoading} />
         <ToastContainer />
         <Grid container spacing={0} sx={{ height: "100vh", width: "100%" }}>
           <Stack direction="row" flexGrow={1}>

@@ -111,6 +111,10 @@ class Contact {
       const { id } = req.params;
       const contacts = await this.prisma.tbl_contacts.findUnique({
         where: { id: Number(id), is_deleted: false },
+        include: {
+          address: true,
+          logs: true,
+        },
       });
 
       let response = new ResponseHandler(null, "No contact found", 400);
