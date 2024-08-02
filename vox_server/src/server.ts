@@ -4,6 +4,7 @@ import cors from "cors";
 
 import "dotenv/config";
 import MainRouter from "./routes";
+import { log } from "./utils/logger";
 
 class Server {
   private app: express.Application;
@@ -28,7 +29,7 @@ class Server {
 
   private startServer() {
     this.app.listen(this.port, () => {
-      console.log(`Server running at http://localhost:${this.port} ✈️`);
+      log.success(`Server running at http://localhost:${this.port}`)
     });
   }
 }
