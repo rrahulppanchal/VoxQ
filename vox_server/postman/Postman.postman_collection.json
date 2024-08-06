@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "fb27bc79-d9bf-479c-8f00-79d6ea08e214",
+		"name": "Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26708857"
+	},
+	"item": [
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "CotactById",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "CreateContacts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIyOTIwNDk1fQ.66DRKJ3uRzvZkpgVPUtjQerANre1Y7IytD_CmNN84L0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"email\": \"bob.williams@example.com\",\r\n        \"first_name\": \"Bob\",\r\n        \"last_name\": \"Williams\",\r\n        \"phone\": \"+5566778899\",\r\n        \"assigned_to\": 211,\r\n        \"assigned_by\": 104,\r\n        \"verified_by\": 306,\r\n        \"created_by\": 407,\r\n        \"status\": 1,\r\n        \"country\": \"USA\",\r\n        \"pincode\": \"30301\",\r\n        \"city\": \"Atlanta\",\r\n        \"state\": \"GA\",\r\n        \"street\": \"Peachtree Street\",\r\n        \"address_note\": \"Near the Park\",\r\n        \"is_verified\": false,\r\n        \"qualified\": true,\r\n        \"is_deleted\": false\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8800/create-contacts",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8800",
+							"path": [
+								"create-contacts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIyOTIwNDk1fQ.66DRKJ3uRzvZkpgVPUtjQerANre1Y7IytD_CmNN84L0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"john@email.com\",\r\n    \"password\": \"john\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8800/auth/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8800",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -46,6 +46,12 @@ model tbl_contacts {
   verified_by Int
   created_by  Int
   status      Int
+  country    String?
+  pincode    String?
+  city       String?
+  state      String?
+  street     String?
+  address_note      String?
   is_verified Boolean              @default(false)
   qualified   Boolean              @default(false)
   is_deleted  Boolean              @default(false)
@@ -53,7 +59,6 @@ model tbl_contacts {
   updated_at  DateTime             @default(now())
 
   logs        tbl_contacts_logs[]
-  address     tbl_contact_address?
 
   @@index([email, phone])
   @@index([assigned_to, status])
@@ -70,19 +75,4 @@ model tbl_contacts_logs {
   contact     tbl_contacts  @relation(fields: [contact_id], references: [id])
 
   @@index([contact_id, created_at])
-}
-
-model tbl_contact_address {
-  id         Int          @id @default(autoincrement())
-  contact_id Int          @unique
-  country    String
-  pincode    Int
-  city       String
-  state      String
-  street     String
-  other      String?
-  
-  contact    tbl_contacts @relation(fields: [contact_id], references: [id])
-
-  @@index([country, state, city])
 }

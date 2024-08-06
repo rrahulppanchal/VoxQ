@@ -111,6 +111,9 @@ class Contact {
       const { id } = req.params;
       const contacts = await this.prisma.tbl_contacts.findUnique({
         where: { id: Number(id), is_deleted: false },
+        include: {
+          logs: true,
+        },
       });
 
       let response = new ResponseHandler(null, "No contact found", 400);
@@ -233,7 +236,7 @@ class Contact {
         this.prisma.tbl_contacts.findMany({
           where,
           include: {
-            address: true,
+            logs: true,
           },
           skip: (pageNumber - 1) * pageSize,
           take: pageSize,
