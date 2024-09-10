@@ -21,7 +21,7 @@ export default function RootLayout({
 
   useLayoutEffect(() => {
     const loginData = JSON.parse(localStorage.getItem("loginData") as string);
-    if (!loginData?.accessToken) {
+    if (!loginData?.token) {
       redirect("/auth/login");
     }
   }, []);

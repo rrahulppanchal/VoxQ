@@ -70,6 +70,8 @@ const ContactTable: React.FC<Props> = ({ data, paginationHandleChange }) => {
     default: { color: "danger", label: "Unverified" },
   };
 
+  console.log(data);
+
   const getStatusProps = (status: any) =>
     statusMap[status] || statusMap.default;
 
@@ -105,8 +107,8 @@ const ContactTable: React.FC<Props> = ({ data, paginationHandleChange }) => {
               </tr>
             </thead>
             <tbody>
-              {data?.contacts?.length > 0 ? (
-                data?.contacts?.map((row: any, index: number) => (
+              {data?.content?.length > 0 ? (
+                data?.content?.map((row: any, index: number) => (
                   <>
                     <tr key={index}>
                       <td>
@@ -115,10 +117,10 @@ const ContactTable: React.FC<Props> = ({ data, paginationHandleChange }) => {
                           onClick={() => {
                             // setCurentUser(row as IUser);
                             // setOpen(true);
-                            router.push("/contact-management/contact/3");
+                            router.push("/contact-management/contact/" + row.id);
                           }}
                         >
-                          {row.first_name + " " + row.last_name}
+                          {row.firstName + " " + row.lastName}
                         </span>
                       </td>
                       <td>{row.email}</td>
@@ -152,6 +154,7 @@ const ContactTable: React.FC<Props> = ({ data, paginationHandleChange }) => {
                               onClick={(e) => {
                                 // setCurentUser(row as IUser);
                                 setOpen(true);
+                                router.push("/contact-management/contact/" + row.id);
                               }}
                             >
                               <ListItemDecorator sx={{ color: "inherit" }}>

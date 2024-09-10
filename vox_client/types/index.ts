@@ -1,5 +1,5 @@
 export interface ILoginData {
-  accessToken: string;
+  token: string;
   id: number;
   userName: string;
   email: string;
@@ -36,7 +36,7 @@ interface SortByFilter {
 
 export interface FilterState {
   page: number;
-  limit: number;
+  size: number;
   search: string;
   contact: boolean;
   date: DateFilter;

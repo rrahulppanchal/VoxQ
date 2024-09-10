@@ -44,8 +44,8 @@ import { useLoader } from "@/store/loader-context";
 const options = ["Add Contact", "Add multiple contacts", "Import contacts"];
 
 const filterInitialState: FilterState = {
-  page: 1,
-  limit: 10,
+  page: 0,
+  size: 20,
   search: "",
   contact: false,
   date: {
@@ -89,6 +89,7 @@ export default function ContactManagement() {
     React.useState<FilterState>(filterInitialState);
 
   const contactsData = useContacts(filterState);
+  console.log(contactsData);
   setLoading(contactsData?.isFetching);
 
   const handleClick = () => {
@@ -345,7 +346,7 @@ export default function ContactManagement() {
             ) : null}
 
             <ContactTable
-              data={contactsData.data?.data}
+              data={contactsData.data}
               paginationHandleChange={paginationHandleChange}
             />
           </Box>

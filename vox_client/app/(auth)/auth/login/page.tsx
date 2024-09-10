@@ -25,7 +25,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 
 import { post } from "@/helper/web.requests";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 interface FormValues {
   email: string;
   password: string;
@@ -39,6 +39,7 @@ const validationSchema = Yup.object({
 });
 
 export default function Login() {
+  const router = useRouter();
   const [getPasswordView, setPasswordView] = useState({
     isPassword: false,
   });
@@ -46,15 +47,15 @@ export default function Login() {
   const handleLogin = async (values: FormValues) => {
     const id = toast.loading("User logging in...");
     try {
-      const data = await post("/auth/login", values);
+      const data = await post("/v0/auth/login", values);
       console.log(data);
-      localStorage.setItem("loginData", JSON.stringify(data.data));
+      localStorage.setItem("loginData", JSON.stringify(data));
       toast.update(id, {
         render: "User logged in successfully.",
         type: "success",
         isLoading: false,
       });
-      redirect("/");
+      router.push("/");
     } catch (error) {
       console.log(error);
       toast.update(id, {

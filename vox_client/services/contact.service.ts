@@ -16,7 +16,17 @@ export const useContacts = (data: FilterState) => {
   return useQuery({
     queryKey: ["contacts"],
     queryFn: async () => {
-      const res = await post("/get-contacts", data);
+      const res = await post("/v1/contacts/all", data);
+      return res;
+    },
+  });
+};
+
+export const useContact = (id: String) => {
+  return useQuery({
+    queryKey: ["contact"],
+    queryFn: async () => {
+      const res = await get("/v1/contacts/" + id);
       return res;
     },
   });
