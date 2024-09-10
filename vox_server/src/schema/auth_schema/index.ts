@@ -26,3 +26,28 @@ export const userSchema = z.object({
   is_active: z.boolean(),
   description: z.string(),
 });
+
+export const contactSchema = z.object({
+  id: z.number(),
+  first_name: z.string(),
+  last_name: z.string(),
+  email: z.string(),
+  phone: z.string(),
+  status: z.number(),
+  assigned_by: z.number(),
+  assigned_to: z.number(),
+  created_by: z.number(),
+});
+
+export const contactsSchema = z.array(
+  z.object({
+    first_name: z.string(),
+    last_name: z.string(),
+    email: z.string(),
+    phone: z.string(),
+    status: z.number(),
+    assigned_by: z.number(),
+    assigned_to: z.number(),
+    created_by: z.number(),
+  })
+);

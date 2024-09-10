@@ -31,11 +31,17 @@ import Edit from "@/assets/icons/Edit";
 import Delete from "@/assets/icons/Delete";
 import Comment from "./comment";
 import React, { SetStateAction } from "react";
+import { useContact } from "@/services/contact.service";
+import dayjs from "dayjs";
 
 export default function Page({ params }: { params: { id: string } }) {
   const [isModalOpen, setModalOpen] = React.useState<boolean>(false);
   const { mode } = useColorScheme();
-  console.log(params.id);
+
+  const contactData = useContact(params.id);
+
+  console.log(contactData);
+
   return (
     <Box sx={{ flex: 1 }}>
       <Grid container spacing={0}>
@@ -55,7 +61,10 @@ export default function Page({ params }: { params: { id: string } }) {
             }}
           >
             <Typography level="h3" component="h3" sx={{ pt: 1, mb: 1 }}>
-              John Doe - Told to call on 5th july...
+              {(contactData?.data as any)?.firstName}{" "}
+              {(contactData?.data as any)?.lastName} -{" "}
+              {(contactData?.data as any)?.addressNote},{" "}
+              {(contactData?.data as any)?.city}
             </Typography>
             <Stack
               direction="row"
@@ -65,13 +74,22 @@ export default function Page({ params }: { params: { id: string } }) {
               marginBottom={2}
             >
               <Typography level="body-sm" sx={{ mb: 2 }}>
-                <strong>Created</strong> - Fri 05 july 2024
+                <strong>Created</strong> -{" "}
+                {dayjs((contactData?.data as any)?.createdAt).format(
+                  "ddd DD MMMM YYYY"
+                )}
               </Typography>
               <Typography level="body-sm" sx={{ mb: 2 }}>
-                <strong>Last Updated</strong> - Fri 05 july 2024
+                <strong>Last Updated</strong> -{" "}
+                {dayjs((contactData?.data as any)?.updatedAt).format(
+                  "ddd DD MMMM YYYY"
+                )}
               </Typography>
               <Typography level="body-sm" sx={{ mb: 2 }}>
-                <strong>Follow up</strong> - Fri 05 july 2024
+                <strong>Follow up</strong> -{" "}
+                {dayjs((contactData?.data as any)?.updatedAt).format(
+                  "ddd DD MMMM YYYY"
+                )}
               </Typography>
             </Stack>
           </Box>
@@ -83,229 +101,90 @@ export default function Page({ params }: { params: { id: string } }) {
           >
             <Box sx={{ p: 3, paddingLeft: 10, paddingRight: 10 }}>
               <Stepper orientation="vertical">
-                <Step
-                  indicator={<StepIndicator variant="solid">1</StepIndicator>}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="end"
-                    justifyContent="space-between"
-                    spacing={2}
-                  >
-                    <Typography level="body-md">
-                      Lead assigned to John
-                    </Typography>
-                    <Typography level="body-xs">Fri 05 july 2024</Typography>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <Typography level="body-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ex, impedit accusamus ratione fugit earum aspernatur
-                      obcaecati totam non mollitia pariatur ullam nostrum
-                      quibusdam eveniet. Assumenda, molestiae est! Recusandae
-                      officiis amet nulla quae modi quas doloremque? Ron Swanson{" "}
-                      <br />
-                      14 Lakeshore Drive <br />
-                      Pawnee, IN 12345 <br />
-                      United States <br />
-                      T: 555-555-5555
-                    </Typography>
-                  </Stack>
-                </Step>
-                <Step
-                  indicator={<StepIndicator variant="solid">2</StepIndicator>}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="end"
-                    justifyContent="space-between"
-                    spacing={2}
-                  >
-                    <Typography level="body-md">
-                      John sent advt. mail
-                    </Typography>
-                    <Typography level="body-xs">Fri 05 july 2024</Typography>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <Typography level="body-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ex, impedit accusamus ratione fugit earum aspernatur
-                      obcaecati totam non mollitia pariatur ullam nostrum
-                      quibusdam eveniet. Assumenda, molestiae est! Recusandae
-                      officiis amet nulla quae modi quas doloremque? Ron Swanson{" "}
-                      <br />
-                      14 Lakeshore Drive <br />
-                      Pawnee, IN 12345 <br />
-                      United States <br />
-                      T: 555-555-5555
-                    </Typography>
-                  </Stack>
-                </Step>
-                <Step
-                  indicator={<StepIndicator variant="solid">3</StepIndicator>}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="end"
-                    justifyContent="space-between"
-                    spacing={2}
-                  >
-                    <Typography level="body-md">
-                      John called prospect on call
-                    </Typography>
-                    <Typography level="body-xs">Fri 05 july 2024</Typography>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <Typography level="body-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ex, impedit accusamus ratione fugit earum aspernatur
-                      obcaecati totam non mollitia pariatur ullam nostrum
-                      quibusdam eveniet. Assumenda, molestiae est! Recusandae
-                      officiis amet nulla quae modi quas doloremque? Ron Swanson{" "}
-                      <br />
-                      14 Lakeshore Drive <br />
-                      Pawnee, IN 12345 <br />
-                      United States <br />
-                      T: 555-555-5555
-                    </Typography>
-                  </Stack>
-                </Step>
-                <Step
-                  indicator={<StepIndicator variant="solid">4</StepIndicator>}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="end"
-                    justifyContent="space-between"
-                    spacing={2}
-                  >
-                    <Typography level="body-md">
-                      Prospect ready for demo
-                    </Typography>
-                    <Typography level="body-xs">Fri 05 july 2024</Typography>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <Typography level="body-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ex, impedit accusamus ratione fugit earum aspernatur
-                      obcaecati totam non mollitia pariatur ullam nostrum
-                      quibusdam eveniet. Assumenda, molestiae est! Recusandae
-                      officiis amet nulla quae modi quas doloremque? Ron Swanson{" "}
-                      <br />
-                      14 Lakeshore Drive <br />
-                      Pawnee, IN 12345 <br />
-                      United States <br />
-                      T: 555-555-5555
-                    </Typography>
-                  </Stack>
-                </Step>
-                <Step
-                  indicator={<StepIndicator variant="solid">5</StepIndicator>}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="end"
-                    justifyContent="space-between"
-                    spacing={2}
-                  >
-                    <Typography level="body-md">
-                      Prospect ready for conversion
-                    </Typography>
-                    <Typography level="body-xs">Fri 05 july 2024</Typography>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <Typography level="body-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ex, impedit accusamus ratione fugit earum aspernatur
-                      obcaecati totam non mollitia pariatur ullam nostrum
-                      quibusdam eveniet. Assumenda, molestiae est! Recusandae
-                      officiis amet nulla quae modi quas doloremque? Ron Swanson{" "}
-                      <br />
-                      14 Lakeshore Drive <br />
-                      Pawnee, IN 12345 <br />
-                      United States <br />
-                      T: 555-555-5555
-                    </Typography>
-                  </Stack>
-                </Step>
-                <Step
-                  indicator={
-                    <StepIndicator variant="solid" color="primary">
-                      6
-                    </StepIndicator>
-                  }
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="end"
-                    justifyContent="space-between"
-                    spacing={2}
-                  >
-                    <Typography level="body-md">Follow up required</Typography>
-                    <Typography level="body-xs">Fri 05 july 2024</Typography>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <Typography level="body-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Ex, impedit accusamus ratione fugit earum aspernatur
-                      obcaecati totam non mollitia pariatur ullam nostrum
-                      quibusdam eveniet. Assumenda, molestiae est! Recusandae
-                      officiis amet nulla quae modi quas doloremque? Ron Swanson{" "}
-                      <br />
-                      14 Lakeshore Drive <br />
-                      Pawnee, IN 12345 <br />
-                      United States <br />
-                      T: 555-555-5555
-                    </Typography>
-
-                    <Dropdown>
-                      <MenuButton
-                        slots={{ root: Chip }}
-                        slotProps={{
-                          root: { variant: "outlined", color: "neutral" },
-                        }}
+                {(contactData?.data as any)?.logs?.length > 0 &&
+                  (contactData?.data as any)?.logs?.map(
+                    (data: any, index: number) => (
+                      <Step
+                        indicator={
+                          <StepIndicator
+                            variant="solid"
+                            color={
+                              (contactData?.data as any)?.logs?.length - 1 ==
+                              index
+                                ? "primary"
+                                : "neutral"
+                            }
+                          >
+                            {index + 1}
+                          </StepIndicator>
+                        }
                       >
-                        More
-                      </MenuButton>
-                      <Menu
-                        placement="bottom-end"
-                        variant="outlined"
-                        color="neutral"
-                      >
-                        <MenuItem
-                          onClick={(e) => {
-                            // setCurentUser(row as IUser);
-                            // setMoreOpen(true);
-                          }}
+                        <Stack
+                          direction="row"
+                          alignItems="end"
+                          justifyContent="space-between"
+                          spacing={2}
                         >
-                          <ListItemDecorator sx={{ color: "inherit" }}>
-                            {/* <Users /> */}
-                          </ListItemDecorator>
-                          About
-                        </MenuItem>
-                        <MenuItem onClick={() => setModalOpen(true)}>
-                          <ListItemDecorator>
-                            <Edit />
-                          </ListItemDecorator>
-                          Edit
-                        </MenuItem>
-                        <ListDivider />
-                        <MenuItem variant="plain" color="danger">
-                          <ListItemDecorator sx={{ color: "inherit" }}>
-                            <Delete />
-                          </ListItemDecorator>
-                          Delete
-                        </MenuItem>
-                      </Menu>
-                    </Dropdown>
-                  </Stack>
-                </Step>
+                          <Typography level="body-md">{data.title}</Typography>
+                          <Typography level="body-xs">
+                            {dayjs(data.createdAt).format("ddd DD MMMM YYYY")}
+                          </Typography>
+                        </Stack>
+
+                        <Stack spacing={1}>
+                          <Typography level="body-sm">
+                            {data.description}
+                          </Typography>
+                          {(contactData?.data as any)?.logs?.length - 1 ==
+                            index && (
+                            <Dropdown>
+                              <MenuButton
+                                slots={{ root: Chip }}
+                                slotProps={{
+                                  root: {
+                                    variant: "outlined",
+                                    color: "neutral",
+                                  },
+                                }}
+                              >
+                                More
+                              </MenuButton>
+                              <Menu
+                                placement="bottom-end"
+                                variant="outlined"
+                                color="neutral"
+                              >
+                                <MenuItem
+                                  onClick={(e) => {
+                                    // setCurentUser(row as IUser);
+                                    // setMoreOpen(true);
+                                  }}
+                                >
+                                  <ListItemDecorator sx={{ color: "inherit" }}>
+                                    {/* <Users /> */}
+                                  </ListItemDecorator>
+                                  About
+                                </MenuItem>
+                                <MenuItem onClick={() => setModalOpen(true)}>
+                                  <ListItemDecorator>
+                                    <Edit />
+                                  </ListItemDecorator>
+                                  Edit
+                                </MenuItem>
+                                <ListDivider />
+                                <MenuItem variant="plain" color="danger">
+                                  <ListItemDecorator sx={{ color: "inherit" }}>
+                                    <Delete />
+                                  </ListItemDecorator>
+                                  Delete
+                                </MenuItem>
+                              </Menu>
+                            </Dropdown>
+                          )}
+                        </Stack>
+                      </Step>
+                    )
+                  )}
               </Stepper>
             </Box>
           </Sheet>

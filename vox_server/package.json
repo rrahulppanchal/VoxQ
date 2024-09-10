@@ -7,8 +7,9 @@
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
     "create_database": "prisma db push",
-    "prisma_g": "prisma generateush",
+    "prisma_g": "prisma generate",
     "prisma_m": "prisma migrate dev",
+    "studio": "prisma studio",
     "database": "docker-compose up -d"
   },
   "devDependencies": {

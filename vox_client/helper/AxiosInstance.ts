@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8800", // Replace with your API base URL
+  baseURL: "127.0.0.1:8080", // Replace with your API base URL
   timeout: 30000, // Request timeout in milliseconds
 });
 
@@ -15,8 +15,8 @@ axiosInstance.interceptors.request.use(
 
     // Add the access token to the request headers if it exists
     if (loginData) {
-      config.headers.Authorization = `Bearer ${loginData.accessToken}`;
-      config.headers.cookie = `${loginData.accessToken}`;
+      config.headers.Authorization = `Bearer ${loginData.token}`;
+      config.headers.cookie = `${loginData.token}`;
     }
     return config;
   },

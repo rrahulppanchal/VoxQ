@@ -1,0 +1,472 @@
+{
+	"info": {
+		"_postman_id": "26d45d3e-1533-4f22-a96e-daef8a2c6566",
+		"name": "vox_q_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28164960"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john@email.com\",\n  \"password\": \"Admin@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "create-contacts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "authorization",
+								"value": "\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4OTExMjQ4fQ.FImfeMxXRCHL-BmsWLfmsN7F5AI4-WWG0SXE63AlSGg"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"first_name\": \"test222\",\n    \"last_name\": \"test\",\n    \"email\": \"test\",\n    \"phone\": \"test\",\n    \"status\": 1,\n    \"assigned_by\": 1,\n    \"assigned_to\": 1,\n    \"created_by\": 1,\n    \"verified_by\": 1\n  }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/create-contacts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"create-contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-contact",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "authorization",
+								"value": "\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4OTExMjQ4fQ.FImfeMxXRCHL-BmsWLfmsN7F5AI4-WWG0SXE63AlSGg"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"test11\",\n  \"id\": 5,\n  \"last_name\": \"test1\",\n  \"email\": \"test1\",\n  \"phone\": \"211122\",\n  \"status\": 1,\n  \"assigned_by\": 1,\n  \"assigned_to\": 1,\n  \"created_by\": 1,\n  \"verified_by\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/update-contact",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"update-contact"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-contacts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "authorization",
+								"value": "\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4OTExMjQ4fQ.FImfeMxXRCHL-BmsWLfmsN7F5AI4-WWG0SXE63AlSGg"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"page\": 1,\n  \"limit\": 10,\n  \"search\": \"India\",\n  \"contact\": false,\n  \"date\": {\n    \"lastYear\": false,\n    \"lastMonth\": false,\n    \"lastWeek\": false,\n    \"lastDay\": false,\n    \"lastHour\": false\n  },\n  \"status\": {\n    \"active\": false,\n    \"inActive\": false,\n    \"followUp\": false,\n    \"noAction\": false,\n    \"verified\": false,\n    \"unVerified\": false\n  },\n  \"sortBy\": {\n    \"recentlyUpdated\": false,\n    \"fresh\": false,\n    \"actionRequiured\": false,\n    \"inQueue\": false\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/get-contacts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"get-contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-contact",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "authorization",
+								"value": "\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4OTExMjQ4fQ.FImfeMxXRCHL-BmsWLfmsN7F5AI4-WWG0SXE63AlSGg"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8800/delete-contact/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"delete-contact",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-contact_id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "authorization",
+								"value": "\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4OTExMjQ4fQ.FImfeMxXRCHL-BmsWLfmsN7F5AI4-WWG0SXE63AlSGg"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8800/get-contact/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"get-contact",
+								"8"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzI1NTU1MzU5fQ.4gOIAXFVw3H0SQPGGz2ommGURxL1c8eTgZdVyEuDC80",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "create-user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"johndoe\",\n  \"user_email\": \"johndoe@email.com\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"password\": \"Admin@123\",\n  \"description\": \"John user create for postgres\",\n  \"phone\": \"+91 0000000000\",\n  \"j_date\": \"2022-05-04T00:00:00.000Z\",\n  \"l_date\": null,\n  \"user_role\": \"Admin\",\n  \"is_active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/create-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"create-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user_id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8800/get-user/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"get-user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 3,\n  \"user_name\": \"test1\",\n  \"user_email\": \"test1@email.com\",\n  \"first_name\": \"test1\",\n  \"last_name\": \"test1\",\n  \"password\": \"test1\",\n  \"description\": \"test1\",\n  \"phone\": \"+91 0000000000\",\n  \"j_date\": \"2022-05-04T00:00:00.000Z\",\n  \"l_date\": null,\n  \"user_role\": \"Admin\",\n  \"is_active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/update-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"update-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Thunder Client (https://www.thunderclient.com)"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8800/delete-user/0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"delete-user",
+								"0"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzI1NTU1MzU5fQ.4gOIAXFVw3H0SQPGGz2ommGURxL1c8eTgZdVyEuDC80",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
